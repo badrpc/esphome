@@ -11,9 +11,7 @@ MULTI_CONF = True
 CONF_ENCRYPTION_KEY = "encryption_key"
 
 bthome_ns = cg.esphome_ns.namespace("bthome")
-BTHome = bthome_ns.class_(
-    "BTHome", esp32_ble_tracker.ESPBTDeviceListener, cg.Component
-)
+BTHome = bthome_ns.class_("BTHome", esp32_ble_tracker.ESPBTDeviceListener, cg.Component)
 
 CONFIG_SCHEMA = (
     cv.Schema(
