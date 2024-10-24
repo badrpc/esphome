@@ -8,7 +8,7 @@ CODEOWNERS = ["@badrpc"]
 DEPENDENCIES = ["esp32_ble_tracker"]
 MULTI_CONF = True
 
-CONF_ENCRYPTION_KEY = 'encryption_key'
+CONF_ENCRYPTION_KEY = "encryption_key"
 
 bthome_ns = cg.esphome_ns.namespace("bthome")
 BTHome = bthome_ns.class_(

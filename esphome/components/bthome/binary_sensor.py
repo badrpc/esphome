@@ -9,7 +9,7 @@ from esphome.const import (
 from . import BTHome
 
 
-CONF_WINDOW = 'window'
+CONF_WINDOW = "window"
 
 
 DEPENDENCIES = ["bthome"]
