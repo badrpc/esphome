@@ -8,168 +8,7 @@
 namespace esphome {
 namespace bthome {
 
-// 0x00    packet id   uint8 (1 byte)  0009    9
-// 0x01    battery     uint8 (1 byte)  1   0161    97  %
-// 0x02    temperature     sint16 (2 bytes)    0.01    02CA09  25.06   °C
-// 0x03    humidity    uint16 (2 bytes)    0.01    03BF13  50.55   %
-// 0x04    pressure    uint24 (3 bytes)    0.01    04138A01    1008.83     hPa
-// 0x05    illuminance     uint24 (3 bytes)    0.01    05138A14    13460.67    lux
-// 0x06    mass (kg)   uint16 (2 byte)     0.01    065E1F  80.3    kg
-// 0x07    mass (lb)   uint16 (2 byte)     0.01    073E1D  74.86   lb
-// 0x08    dewpoint    sint16 (2 bytes)    0.01    08CA06  17.38   °C
-// 0x09    count   uint (1 bytes)  1   0960    96
-// 0x0A    energy  uint24 (3 bytes)    0.001   0A138A14    1346.067    kWh
-// 0x0B    power   uint24 (3 bytes)    0.01    0B021B00    69.14   W
-// 0x0C    voltage     uint16 (2 bytes)    0.001   0C020C  3.074   V
-// 0x0D    pm2.5   uint16 (2 bytes)    1   0D120C  3090    ug/m3
-// 0x0E    pm10    uint16 (2 bytes)    1   0E021C  7170    ug/m3
-// 0x0F    generic boolean     uint8 (1 byte)  0F01    0 (False = Off) 1 (True = On)
-// 0x10    power   uint8 (1 byte)  1001    0 (False = Off) 1 (True = On)
-// 0x11    opening     uint8 (1 byte)  1100    0 (False = Closed) 1 (True = Open)
-// 0x12    co2     uint16 (2 bytes)    1   12E204  1250    ppm
-// 0x13    tvoc    uint16 (2 bytes)    1   133301  307     ug/m3
-// 0x14    moisture    uint16 (2 bytes)    0.01    14020C  30.74   %
-// 0x15    battery     uint8 (1 byte)  1501    0 (False = Normal) 1 (True = Low)
-// 0x16    battery charging    uint8 (1 byte)  1601    0 (False = Not Charging) 1 (True = Charging)
-// 0x17    carbon monoxide     uint8 (1 byte)  1700    0 (False = Not detected) 1 (True = Detected)
-// 0x18    cold    uint8 (1 byte)  1801    0 (False = Normal) 1 (True = Cold)
-// 0x19    connectivity    uint8 (1 byte)  1900    0 (False = Disconnected) 1 (True = Connected)
-// 0x1A    door    uint8 (1 byte)  1A00    0 (False = Closed) 1 (True = Open)
-// 0x1B    garage door     uint8 (1 byte)  1B01    0 (False = Closed) 1 (True = Open)
-// 0x1C    gas     uint8 (1 byte)  1C01    0 (False = Clear) 1 (True = Detected)
-// 0x1D    heat    uint8 (1 byte)  1D00    0 (False = Normal) 1 (True = Hot)
-// 0x1E    light   uint8 (1 byte)  1E01    0 (False = No light) 1 (True = Light detected)
-// 0x1F    lock    uint8 (1 byte)  1F01    0 (False = Locked) 1 (True = Unlocked)
-// 0x20    moisture    uint8 (1 byte)  2001    0 (False = Dry) 1 (True = Wet)
-// 0x21    motion  uint8 (1 byte)  2100    0 (False = Clear) 1 (True = Detected)
-// 0x22    moving  uint8 (1 byte)  2201    0 (False = Not moving) 1 (True = Moving)
-// 0x23    occupancy   uint8 (1 byte)  2301    0 (False = Clear) 1 (True = Detected)
-// 0x24    plug    uint8 (1 byte)  2400    0 (False = Unplugged) 1 (True = Plugged in)
-// 0x25    presence    uint8 (1 byte)  2500    0 (False = Away) 1 (True = Home)
-// 0x26    problem     uint8 (1 byte)  2601    0 (False = OK) 1 (True = Problem)
-// 0x27    running     uint8 (1 byte)  2701    0 (False = Not Running) 1 (True = Running)
-// 0x28    safety  uint8 (1 byte)  2800    0 (False = Unsafe) 1 (True = Safe)
-// 0x29    smoke   uint8 (1 byte)  2901    0 (False = Clear) 1 (True = Detected)
-// 0x2A    sound   uint8 (1 byte)  2A00    0 (False = Clear) 1 (True = Detected)
-// 0x2B    tamper  uint8 (1 byte)  2B00    0 (False = Off) 1 (True = On)
-// 0x2C    vibration   uint8 (1 byte)  2C01    0 (False = Clear) 1 (True = Detected)
-// 0x2D    window  uint8 (1 byte)  2D01    0 (False = Closed) 1 (True = Open)
-// 0x2E    humidity    uint8 (1 byte)  1   2E23    35  %
-// 0x2F    moisture    uint8 (1 byte)  1   2F23    35  %
-// 0x3A    button  0x00    None        3A00    0x01    press       3A01    press 0x02    double_press        3A02    double_press 0x03    triple_press        3A03    triple_press 0x04    long_press      3A04    long_press 0x05    long_double_press       3A05    long_double_press 0x06    long_triple_press       3A06    long_triple_press 0x80    hold_press      3A80    hold_press
-// 0x3C    dimmer  0x00    None        3C0000  0x01    rotate left     # steps     3C0103  rotate left 3 steps 0x02    rotate right    # steps     3C020A  rotate right 10 steps
-// 0x3D    count   uint (2 bytes)  1   3D0960  24585
-// 0x3E    count   uint (4 bytes)  1   3E2A2C0960  1611213866
-// 0x3F    rotation    sint16 (2 bytes)    0.1     3F020C  307.4   °
-// 0x40    distance (mm)   uint16 (2 bytes)    1   400C00  12  mm
-// 0x41    distance (m)    uint16 (2 bytes)    0.1     414E00  7.8     m
-// 0x42    duration    uint24 (3 bytes)    0.001   424E3400    13.390  s
-// 0x43    current     uint16 (2 bytes)    0.001   434E34  13.39   A
-// 0x44    speed   uint16 (2 bytes)    0.01    444E34  133.90  m/s
-// 0x45    temperature     sint16 (2 bytes)    0.1     451101  27.3    °C
-// 0x46    UV index    uint8 (1 byte)  0.1     4632    5.0
-// 0x47    volume  uint16 (2 bytes)    0.1     478756  2215.1  L
-// 0x48    volume  uint16 (2 bytes)    1   48DC87  34780   mL
-// 0x49    volume Flow Rate    uint16 (2 bytes)    0.001   49DC87  34.780  m3/hr
-// 0x4A    voltage     uint16 (2 bytes)    0.1     4A020C  307.4   V
-// 0x4B    gas     uint24 (3 bytes)    0.001   4B138A14    1346.067    m3
-// 0x4C    gas     uint32 (4 bytes)    0.001   4C41018A01  25821.505   m3
-// 0x4D    energy  uint32 (4 bytes)    0.001   4d12138a14  344593.170  kWh
-// 0x4E    volume  uint32 (4 bytes)    0.001   4E87562A01  19551.879   L
-// 0x4F    water   uint32 (4 bytes)    0.001   4F87562A01  19551.879
-// 0x50    timestamp   uint48 (4 bytes)    -   505d396164  see below
-// 0x51    acceleration    uint16 (2 bytes)    0.001   518756  22.151  m/s²
-// 0x52    gyroscope   uint16 (2 bytes)    0.001   528756  22.151  °/s
-// 0x53    text    see below   -   530C48656C6C6F 20576F726C6421   Hello World!
-// 0x54    raw     see below   -   540C48656C6C6F 20576F726C6421   48656c6c6f20 576f726c6421
-// 0x55    volume storage  uint32 (4 bytes)    0.001   5587562A01  19551.879   L
-// 0xF0    device type id  uint16 (2 bytes)    F00100  1
-// 0xF1    firmware version    uint32 (4 bytes)    F100010204  4.2.1.0
-// 0xF2    firmware version    uint24 (3 bytes)    F2000106    6.1.0
-
 static const char *const TAG = "bthome";
-
-const OIDUInt8<0x00> oid_pid;
-const OIDUFixedPoint<0x01, 1> oid_battery_percent;
-const OIDSFixedPoint<0x02, 2, 1, 100> oid_temperature_celsius_x100;
-const OIDUFixedPoint<0x03, 2, 1, 100> oid_humidity_percent_x100;
-const OIDUFixedPoint<0x04, 3, 1, 100> oid_pressure_hpa_x100;
-const OIDUFixedPoint<0x05, 3, 1, 100> oid_illuminance_lux_x100;
-const OIDUFixedPoint<0x06, 2, 1, 100> oid_mass_kg_x100;
-const OIDUFixedPoint<0x07, 2, 45359237, 100000000> oid_mass_lb_x100; // Converts to kg.
-const OIDSFixedPoint<0x08, 2> oid_dewpoint_celsius_x100;
-const OIDUFixedPoint<0x09, 1> oid_counter8;
-const OIDUFixedPoint<0x0a, 3, 1, 1000> oid_energy_kwh_x1000;
-const OIDUFixedPoint<0x0b, 3, 1, 100> oid_power_w_x100;
-const OIDUFixedPoint<0x0c, 2, 1, 1000> oid_voltage_v_x1000;
-const OIDUFixedPoint<0x0d, 2> oid_pm2_5_ug_m3;
-const OIDUFixedPoint<0x0e, 2> oid_pm10_ug_m3;
-const OIDBool<0x0f> oid_bool;
-const OIDBool<0x10> oid_power;
-const OIDBool<0x11> oid_opening;
-const OIDUFixedPoint<0x12, 2> oid_co2_concentration_ppm;
-const OIDUFixedPoint<0x13, 2> oid_tvoc_ug_m3;
-const OIDUFixedPoint<0x14, 2, 1, 100> oid_moisture_percent_x100;
-const OIDBool<0x15> oid_battery;
-const OIDBool<0x16> oid_battery_charging;
-const OIDBool<0x17> oid_carbon_monoxide;
-const OIDBool<0x18> oid_cold;
-const OIDBool<0x19> oid_connectivity;
-const OIDBool<0x1a> oid_door;
-const OIDBool<0x1b> oid_garage_door;
-const OIDBool<0x1c> oid_gas;
-const OIDBool<0x1d> oid_heat;
-const OIDBool<0x1e> oid_light;
-const OIDBool<0x1f> oid_lock;
-const OIDBool<0x20> oid_moisture;
-const OIDBool<0x21> oid_motion;
-const OIDBool<0x22> oid_moving;
-const OIDBool<0x23> oid_occupancy;
-const OIDBool<0x24> oid_plug;
-const OIDBool<0x25> oid_presence;
-const OIDBool<0x26> oid_problem;
-const OIDBool<0x27> oid_running;
-const OIDBool<0x28> oid_safety;
-const OIDBool<0x29> oid_smoke;
-const OIDBool<0x2a> oid_sound;
-const OIDBool<0x2b> oid_tamper;
-const OIDBool<0x2c> oid_vibration;
-const OIDBool<0x2d> oid_window;
-const OIDUFixedPoint<0x2e, 1> oid_humidity_percent;
-const OIDUFixedPoint<0x2f, 1> oid_moisture_percent;
-// 0x30 - 0x39
-const OIDUFixedPoint<0x3a, 1> oid_button_event;
-// 0x3b
-// 0x3C    dimmer  0x00    None        3C0000  0x01    rotate left     # steps     3C0103  rotate left 3 steps 0x02    rotate right    # steps     3C020A  rotate right 10 steps
-const OIDUFixedPoint<0x3d, 2> oid_counter16;
-const OIDUFixedPoint<0x3e, 4> oid_counter32;
-const OIDUFixedPoint<0x3f, 2, 1, 10> oid_angle_degrees_x10;
-// 0x40    distance (mm)   uint16 (2 bytes)    1   400C00  12  mm
-// 0x41    distance (m)    uint16 (2 bytes)    0.1     414E00  7.8     m
-// 0x42    duration    uint24 (3 bytes)    0.001   424E3400    13.390  s
-// 0x43    current     uint16 (2 bytes)    0.001   434E34  13.39   A
-// 0x44    speed   uint16 (2 bytes)    0.01    444E34  133.90  m/s
-// 0x45    temperature     sint16 (2 bytes)    0.1     451101  27.3    °C
-// 0x46    UV index    uint8 (1 byte)  0.1     4632    5.0
-// 0x47    volume  uint16 (2 bytes)    0.1     478756  2215.1  L
-// 0x48    volume  uint16 (2 bytes)    1   48DC87  34780   mL
-// 0x49    volume Flow Rate    uint16 (2 bytes)    0.001   49DC87  34.780  m3/hr
-// 0x4A    voltage     uint16 (2 bytes)    0.1     4A020C  307.4   V
-// 0x4B    gas     uint24 (3 bytes)    0.001   4B138A14    1346.067    m3
-// 0x4C    gas     uint32 (4 bytes)    0.001   4C41018A01  25821.505   m3
-// 0x4D    energy  uint32 (4 bytes)    0.001   4d12138a14  344593.170  kWh
-// 0x4E    volume  uint32 (4 bytes)    0.001   4E87562A01  19551.879   L
-// 0x4F    water   uint32 (4 bytes)    0.001   4F87562A01  19551.879
-// 0x50    timestamp   uint48 (4 bytes)    -   505d396164  see below
-// 0x51    acceleration    uint16 (2 bytes)    0.001   518756  22.151  m/s²
-// 0x52    gyroscope   uint16 (2 bytes)    0.001   528756  22.151  °/s
-// 0x53    text    see below   -   530C48656C6C6F 20576F726C6421   Hello World!
-// 0x54    raw     see below   -   540C48656C6C6F 20576F726C6421   48656c6c6f20 576f726c6421
-// 0x55    volume storage  uint32 (4 bytes)    0.001   5587562A01  19551.879   L
-// 0x56 - 0xef
-// 0xF0    device type id  uint16 (2 bytes)    F00100  1
-// 0xF1    firmware version    uint32 (4 bytes)    F100010204  4.2.1.0
-// 0xF2    firmware version    uint24 (3 bytes)    F2000106    6.1.0
 
 #define OID_ENTRY(oid) [oid.oid_] = oid.scan
 
@@ -366,24 +205,28 @@ int decrypt(const uint8_t *data, ssize_t data_len, const uint8_t *mac_address, u
 }
 
 void BTHome::dump_config() {
-  ESP_LOGCONFIG(TAG, "BTHome");
+  char bthome_mac[25];
+  snprintf(bthome_mac, sizeof(bthome_mac),
+           "BTHome %02X:%02X:%02X:%02X:%02X:%02X",
+           uint8_t((this->address_ >> 40) & 0x00000000000000ff),
+           uint8_t((this->address_ >> 32) & 0x00000000000000ff),
+           uint8_t((this->address_ >> 24) & 0x00000000000000ff),
+           uint8_t((this->address_ >> 16) & 0x00000000000000ff),
+           uint8_t((this->address_ >> 8) & 0x00000000000000ff),
+           uint8_t((this->address_) & 0x00000000000000ff));
+  ESP_LOGCONFIG(TAG, bthome_mac);
   if (this->encrypted_) {
-    // ESP_LOGCONFIG(TAG, "  Encryption key: %s", format_hex_pretty(this->encryption_key_, 16).c_str());
     ESP_LOGCONFIG(TAG, "  Encryption key set");
   } else {
     ESP_LOGCONFIG(TAG, "  Encryption key not set");
   }
-#ifdef USE_BINARY_SENSOR
-  LOG_BINARY_SENSOR("  ", "Window", this->window_);
-#endif
-#ifdef USE_SENSOR
-  LOG_SENSOR("  ", "Illuminance", this->illuminance_);
-  LOG_SENSOR("  ", "Battery Level", this->battery_level_);
-#endif
+  for (auto pub : this->publishers_) {
+    pub->log("  ");
+  }
 }
 
 bool BTHome::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
-  if (device.address_uint64() != address_) {
+  if (device.address_uint64() != this->address_) {
     ESP_LOGVV(TAG, "parse_device(): unknown MAC address.");
     return false;
   }
@@ -508,27 +351,17 @@ void BTHome::set_encryption_key(const std::string &encryption_key) {
   this->encrypted_ = true;
 }
 
-#ifdef USE_BINARY_SENSOR
-void BTHome::set_window(binary_sensor::BinarySensor *window) {
-  this->window_ = window;
-  this->set_publisher(oid_window.new_publisher(window));
+void SensorPublisher::log(const char* prefix) const {
+  char oid_str[5];
+  snprintf(oid_str, sizeof(oid_str), "%#04x", this->oid_);
+  LOG_SENSOR(prefix, oid_str, this->sensor_);
 }
-#endif
 
-#ifdef USE_SENSOR
-void BTHome::set_angle(sensor::Sensor *angle) {
-  this->angle_ = angle;
-  this->set_publisher(oid_angle_degrees_x10.new_publisher(angle));
+void BinarySensorPublisher::log(const char* prefix) const {
+  char oid_str[5];
+  snprintf(oid_str, sizeof(oid_str), "%#04x", this->oid_);
+  LOG_BINARY_SENSOR(prefix, oid_str, this->sensor_);
 }
-void BTHome::set_illuminance(sensor::Sensor *illuminance) {
-  this->illuminance_ = illuminance;
-  this->set_publisher(oid_illuminance_lux_x100.new_publisher(illuminance));
-}
-void BTHome::set_battery_level(sensor::Sensor *battery_level) {
-  this->battery_level_ = battery_level;
-  this->set_publisher(oid_battery_percent.new_publisher(battery_level));
-}
-#endif
 
 }  // namespace bthome
 }  // namespace esphome
