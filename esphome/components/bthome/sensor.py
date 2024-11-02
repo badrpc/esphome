@@ -27,4 +27,4 @@ FINAL_VALIDATE_SCHEMA = unique_oid
 async def to_code(config):
     parent = await cg.get_variable(config[CONF_BTHOME_ID])
     sens = await sensor.new_sensor(config)
-    cg.add(parent.register_sensor(oid_variable(config[CONF_OID]), sens))
+    cg.add(parent.register_sensor(config[CONF_OID], oid_variable(config[CONF_OID]), sens))

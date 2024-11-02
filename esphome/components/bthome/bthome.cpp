@@ -8,57 +8,56 @@
 namespace esphome {
 namespace bthome {
 
-static const char *const TAG = "bthome";
-
-#define OID_ENTRY(oid) [oid.oid_] = oid.scan
+#define OID_VAR(oid) oid_##oid
+#define OID_ENTRY(oid) [oid] = OID_VAR(oid).scan
 
 static scan_func_t* oids[256] = {
-  OID_ENTRY(oid_pid),
-  OID_ENTRY(oid_battery_percent),
-  OID_ENTRY(oid_temperature_celsius_x100),
-  OID_ENTRY(oid_humidity_percent_x100),
-  OID_ENTRY(oid_pressure_hpa_x100),
-  OID_ENTRY(oid_illuminance_lux_x100),
-  OID_ENTRY(oid_mass_kg_x100),
-  OID_ENTRY(oid_mass_lb_x100),
-  OID_ENTRY(oid_dewpoint_celsius_x100),
-  OID_ENTRY(oid_counter8),
-  OID_ENTRY(oid_energy_kwh_x1000),
-  OID_ENTRY(oid_power_w_x100),
-  OID_ENTRY(oid_voltage_v_x1000),
-  OID_ENTRY(oid_pm2_5_ug_m3),
-  OID_ENTRY(oid_pm10_ug_m3),
-  OID_ENTRY(oid_bool),
-  OID_ENTRY(oid_power),
-  OID_ENTRY(oid_opening),
-  OID_ENTRY(oid_co2_concentration_ppm),
-  OID_ENTRY(oid_tvoc_ug_m3),
-  OID_ENTRY(oid_moisture_percent_x100),
-  OID_ENTRY(oid_battery),
-  OID_ENTRY(oid_battery_charging),
-  OID_ENTRY(oid_carbon_monoxide),
-  OID_ENTRY(oid_cold),
-  OID_ENTRY(oid_connectivity),
-  OID_ENTRY(oid_door),
-  OID_ENTRY(oid_garage_door),
-  OID_ENTRY(oid_gas),
-  OID_ENTRY(oid_heat),
-  OID_ENTRY(oid_light),
-  OID_ENTRY(oid_lock),
-  OID_ENTRY(oid_moisture),
-  OID_ENTRY(oid_motion),
-  OID_ENTRY(oid_moving),
-  OID_ENTRY(oid_occupancy),
-  OID_ENTRY(oid_plug),
-  OID_ENTRY(oid_presence),
-  OID_ENTRY(oid_problem),
-  OID_ENTRY(oid_running),
-  OID_ENTRY(oid_safety),
-  OID_ENTRY(oid_smoke),
-  OID_ENTRY(oid_sound),
-  OID_ENTRY(oid_tamper),
-  OID_ENTRY(oid_vibration),
-  OID_ENTRY(oid_window),
+  [0x00] = oid_pid.scan,
+  OID_ENTRY(0x01),
+  OID_ENTRY(0x02),
+  OID_ENTRY(0x03),
+  OID_ENTRY(0x04),
+  OID_ENTRY(0x05),
+  OID_ENTRY(0x06),
+  OID_ENTRY(0x07),
+  OID_ENTRY(0x08),
+  OID_ENTRY(0x09),
+  OID_ENTRY(0x0a),
+  OID_ENTRY(0x0b),
+  OID_ENTRY(0x0c),
+  OID_ENTRY(0x0d),
+  OID_ENTRY(0x0e),
+  OID_ENTRY(0x0f),
+  OID_ENTRY(0x10),
+  OID_ENTRY(0x11),
+  OID_ENTRY(0x12),
+  OID_ENTRY(0x13),
+  OID_ENTRY(0x14),
+  OID_ENTRY(0x15),
+  OID_ENTRY(0x16),
+  OID_ENTRY(0x17),
+  OID_ENTRY(0x18),
+  OID_ENTRY(0x19),
+  OID_ENTRY(0x1a),
+  OID_ENTRY(0x1b),
+  OID_ENTRY(0x1c),
+  OID_ENTRY(0x1d),
+  OID_ENTRY(0x1e),
+  OID_ENTRY(0x1f),
+  OID_ENTRY(0x20),
+  OID_ENTRY(0x21),
+  OID_ENTRY(0x22),
+  OID_ENTRY(0x23),
+  OID_ENTRY(0x24),
+  OID_ENTRY(0x25),
+  OID_ENTRY(0x26),
+  OID_ENTRY(0x27),
+  OID_ENTRY(0x28),
+  OID_ENTRY(0x29),
+  OID_ENTRY(0x2a),
+  OID_ENTRY(0x2b),
+  OID_ENTRY(0x2c),
+  OID_ENTRY(0x2d),
   [0x2e] = nullptr,
   [0x2f] = nullptr,
   [0x30] = nullptr,
@@ -71,12 +70,12 @@ static scan_func_t* oids[256] = {
   [0x37] = nullptr,
   [0x38] = nullptr,
   [0x39] = nullptr,
-  OID_ENTRY(oid_button_event),
+  OID_ENTRY(0x3a),
   [0x3b] = nullptr,
   [0x3c] = nullptr,
-  OID_ENTRY(oid_counter16),
-  OID_ENTRY(oid_counter32),
-  OID_ENTRY(oid_angle_degrees_x10),
+  OID_ENTRY(0x3d),
+  OID_ENTRY(0x3e),
+  OID_ENTRY(0x3f),
 };
 
 uint32_t read_uint(size_t size, const uint8_t *data) {
@@ -155,6 +154,7 @@ struct device_information {
 // data is a full data received from device. Must be > 9 bytes log.
 // mac_address has to be 6 bytes long.
 // cleartext has to be at least data_len - 9 bytes long.
+// returns 0 on success, anything else indicates an error.
 int decrypt(const uint8_t *data, ssize_t data_len, const uint8_t *mac_address, uint16_t uuid, const uint8_t *key, ssize_t keybits, uint8_t *cleartext) {
   mbedtls_ccm_context ctx;
   mbedtls_ccm_init(&ctx);
@@ -285,7 +285,7 @@ bool BTHome::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
       auto oid = *p++;
       ESP_LOGVV(TAG, "OID %#02x", oid);
 
-      if (oid == oid_pid.oid_) {
+      if (oid == 0x00 /* TODO: fix oid number */) {
         UInt32Value v = oid_pid.read(p, data + data_len - p);
         if (v.value == this->last_pid_) {
           ESP_LOGV(TAG, "Packet ID %d already seen, skipping", v.value);
@@ -349,18 +349,6 @@ void BTHome::set_encryption_key(const std::string &encryption_key) {
     this->encryption_key_[i] = std::strtoul(temp, nullptr, 16);
   }
   this->encrypted_ = true;
-}
-
-void SensorPublisher::log(const char* prefix) const {
-  char oid_str[5];
-  snprintf(oid_str, sizeof(oid_str), "%#04x", this->oid_);
-  LOG_SENSOR(prefix, oid_str, this->sensor_);
-}
-
-void BinarySensorPublisher::log(const char* prefix) const {
-  char oid_str[5];
-  snprintf(oid_str, sizeof(oid_str), "%#04x", this->oid_);
-  LOG_BINARY_SENSOR(prefix, oid_str, this->sensor_);
 }
 
 }  // namespace bthome
