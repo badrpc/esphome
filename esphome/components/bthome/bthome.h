@@ -147,6 +147,9 @@ class OIDUFixedPoint: public OIDFixedSize <size_bytes> {
 };
 
 using OIDUInt8 = OIDUInt<1>;
+using OIDUInt16 = OIDUInt<2>;
+using OIDUInt24 = OIDUInt<3>;
+using OIDUInt32 = OIDUInt<4>;
 
 // TODO(badrpc): add inline when it's supported (c++ 17).
 // 0x00    packet id   uint8 (1 byte)  0009    9
@@ -167,7 +170,7 @@ constexpr OIDUFixedPoint<2> oid_0x06(0.01);
 constexpr OIDUFixedPoint<2> oid_0x07(0.01);
 // 0x08    dewpoint    sint16 (2 bytes)    0.01    08CA06  17.38   °C
 constexpr OIDSFixedPoint<2> oid_0x08;
-// 0x09    count   uint (1 bytes)  1   0960    96
+// 0x09    count   uint8 (1 bytes)  1   0960    96
 constexpr OIDUFixedPoint<1> oid_0x09;
 // 0x0A    energy  uint24 (3 bytes)    0.001   0A138A14    1346.067    kWh
 constexpr OIDUFixedPoint<3> oid_0x0a(0.001);
@@ -245,7 +248,7 @@ constexpr OIDBool oid_0x2d;
 constexpr OIDUFixedPoint<1> oid_0x2e;
 // 0x2F    moisture    uint8 (1 byte)  1   2F23    35  %
 constexpr OIDUFixedPoint<1> oid_0x2f;
-// 0x30 - 0x39
+// 0x30 - 0x39 - not defined.
 // 0x3A    button
 //   0x00 None (3A00)
 //   0x01 press (3A01)
@@ -255,18 +258,22 @@ constexpr OIDUFixedPoint<1> oid_0x2f;
 //   0x05 long_double_press (3A05)
 //   0x06 long_triple_press (3A06)
 //   0x80 hold_press (3A80)
+// TODO(badrpc): This is not an appropriate type for this OID. Decide what to
+// do about it and implement correct type.
 constexpr OIDUFixedPoint<1> oid_0x3a;
-// 0x3B
+// 0x3B - not defined.
 // 0x3C    dimmer
 //   0x00    None        3C0000
 //   0x01    rotate left # steps   3C0103  rotate left 3 steps
 //   0x02    rotate right # steps  3C020A  rotate right 10 steps
-// 0x3D    count   uint (2 bytes)  1   3D0960  24585
+// TODO(badrpc): Figure out correct type for this OID and implement it.
+constexpr OIDUInt16 oid_0x3c;
+// 0x3D    count   uint16 (2 bytes)  1   3D0960  24585
 constexpr OIDUFixedPoint<2> oid_0x3d;
-// 0x3E    count   uint (4 bytes)  1   3E2A2C0960  1611213866
+// 0x3E    count   uint32 (4 bytes)  1   3E2A2C0960  1611213866
 constexpr OIDUFixedPoint<4> oid_0x3e;
 // 0x3F    rotation    sint16 (2 bytes)    0.1     3F020C  307.4   °
-constexpr OIDUFixedPoint<2> oid_0x3f(0.1);
+constexpr OIDSFixedPoint<2> oid_0x3f(0.1);
 // 0x40    distance (mm)   uint16 (2 bytes)    1   400C00  12  mm
 constexpr OIDUFixedPoint<2> oid_0x40;
 // 0x41    distance (m)    uint16 (2 bytes)    0.1     414E00  7.8     m
@@ -280,39 +287,51 @@ constexpr OIDUFixedPoint<2> oid_0x44(0.01);
 // 0x45    temperature     sint16 (2 bytes)    0.1     451101  27.3    °C
 constexpr OIDSFixedPoint<2> oid_0x45(0.1);
 // 0x46    UV index    uint8 (1 byte)  0.1     4632    5.0
-constexpr OIDSFixedPoint<1> oid_0x46(0.1);
+constexpr OIDUFixedPoint<1> oid_0x46(0.1);
 // 0x47    volume  uint16 (2 bytes)    0.1     478756  2215.1  L
-constexpr OIDSFixedPoint<2> oid_0x47(0.1);
+constexpr OIDUFixedPoint<2> oid_0x47(0.1);
 // 0x48    volume  uint16 (2 bytes)    1   48DC87  34780   mL
-constexpr OIDSFixedPoint<2> oid_0x48;
+constexpr OIDUFixedPoint<2> oid_0x48;
 // 0x49    volume Flow Rate    uint16 (2 bytes)    0.001   49DC87  34.780  m3/hr
-constexpr OIDSFixedPoint<2> oid_0x49(0.001);
+constexpr OIDUFixedPoint<2> oid_0x49(0.001);
 // 0x4A    voltage     uint16 (2 bytes)    0.1     4A020C  307.4   V
-constexpr OIDSFixedPoint<2> oid_0x4a(0.1);
+constexpr OIDUFixedPoint<2> oid_0x4a(0.1);
 // 0x4B    gas     uint24 (3 bytes)    0.001   4B138A14    1346.067    m3
-constexpr OIDSFixedPoint<3> oid_0x4b(0.001);
+constexpr OIDUFixedPoint<3> oid_0x4b(0.001);
 // 0x4C    gas     uint32 (4 bytes)    0.001   4C41018A01  25821.505   m3
-constexpr OIDSFixedPoint<4> oid_0x4c(0.001);
+constexpr OIDUFixedPoint<4> oid_0x4c(0.001);
 // 0x4D    energy  uint32 (4 bytes)    0.001   4d12138a14  344593.170  kWh
-constexpr OIDSFixedPoint<4> oid_0x4d(0.001);
+constexpr OIDUFixedPoint<4> oid_0x4d(0.001);
 // 0x4E    volume  uint32 (4 bytes)    0.001   4E87562A01  19551.879   L
-constexpr OIDSFixedPoint<4> oid_0x4e(0.001);
+constexpr OIDUFixedPoint<4> oid_0x4e(0.001);
 // 0x4F    water   uint32 (4 bytes)    0.001   4F87562A01  19551.879
-constexpr OIDSFixedPoint<4> oid_0x4f(0.001);
+constexpr OIDUFixedPoint<4> oid_0x4f(0.001);
 // 0x50    timestamp   uint48 (4 bytes)    -   505d396164  see below
-constexpr OIDSFixedPoint<4> oid_0x50;
+constexpr OIDUFixedPoint<4> oid_0x50;
 // 0x51    acceleration    uint16 (2 bytes)    0.001   518756  22.151  m/s²
-constexpr OIDSFixedPoint<2> oid_0x51(0.001);
+constexpr OIDUFixedPoint<2> oid_0x51(0.001);
 // 0x52    gyroscope   uint16 (2 bytes)    0.001   528756  22.151  °/s
-constexpr OIDSFixedPoint<2> oid_0x52(0.001);
+constexpr OIDUFixedPoint<2> oid_0x52(0.001);
 // 0x53    text    see below   -   530C48656C6C6F 20576F726C6421   Hello World!
+// TODO(badrpc): Implement variable size type and figure out how to wire it
+// into ESPHome (text sensor?).
 // 0x54    raw     see below   -   540C48656C6C6F 20576F726C6421   48656c6c6f20 576f726c6421
+// TODO(badrpc): Implement variable size type and figure out how to wire it
+// into ESPHome (text sensor?).
 // 0x55    volume storage  uint32 (4 bytes)    0.001   5587562A01  19551.879   L
-constexpr OIDSFixedPoint<4> oid_0x55(0.001);
-// 0x56 - 0xef
+constexpr OIDUFixedPoint<4> oid_0x55(0.001);
+// 0x56 - 0xef - not defined
 // 0xF0    device type id  uint16 (2 bytes)    F00100  1
+// TODO(badrpc): It is not clear that this type can correctly represent device
+// type ID.
+constexpr OIDUFixedPoint<1> oid_0xf0;
+// TODO(badrpc): Publishing both of the version OID below as a sensor (using
+// float value) does not seem right. Figure out what to do about them and
+// implement.
 // 0xF1    firmware version    uint32 (4 bytes)    F100010204  4.2.1.0
+constexpr OIDUInt32 oid_0xf1;
 // 0xF2    firmware version    uint24 (3 bytes)    F2000106    6.1.0
+constexpr OIDUInt24 oid_0xf2;
 
 class Publisher {
  public:
