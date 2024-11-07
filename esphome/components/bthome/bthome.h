@@ -61,8 +61,6 @@ class OIDFixedSize {
       .next_ptr = data + size_bytes,
     };
   }
-
-  static constexpr size_t size_bytes_ = {size_bytes};
 };
 
 class OIDBool: public OIDFixedSize <1> {

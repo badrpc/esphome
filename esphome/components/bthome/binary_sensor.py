@@ -6,6 +6,7 @@ from . import (
     BTHome,
     CONF_BTHOME_ID,
     CONF_OID,
+    oid_range_validate,
     oid_variable,
     unique_oid,
 )
@@ -17,7 +18,7 @@ CONFIG_SCHEMA = (
         binary_sensor.BinarySensor,
     ).extend({
         cv.GenerateID(CONF_BTHOME_ID): cv.use_id(BTHome),
-        cv.Required(CONF_OID): cv.uint8_t,
+        cv.Required(CONF_OID): oid_range_validate,
     }).extend(cv.COMPONENT_SCHEMA)
 )
 

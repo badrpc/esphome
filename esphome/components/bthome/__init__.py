@@ -28,6 +28,9 @@ CONFIG_SCHEMA = (
 CONFIGURED_OIDS: dict[tuple[str, int], str] = {}
 
 
+oid_range_validate = cv.int_range(min=1, max=255)
+
+
 def unique_oid(config):
     bthome_id = config[CONF_BTHOME_ID]
     oid = config[CONF_OID]

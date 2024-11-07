@@ -479,6 +479,7 @@ bool BTHome::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
 
       if (oid == 0x00 /* TODO: fix oid number */) {
         UInt32Value v = oid_pid.read(p, data + data_len - p);
+        ESP_LOGVV(TAG, "Packet ID: %d", v.value);
         if (v.value == this->last_pid_) {
           ESP_LOGV(TAG, "Packet ID %d already seen, skipping", v.value);
           break;
