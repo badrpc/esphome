@@ -263,9 +263,9 @@ bool BTHome::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
       auto oid = *p++;
       ESP_LOGVV(TAG, "Processing OID %#02x", oid);
 
-      if (oid == oid_pid_id) {
+      if (oid == OID_PID_ID) {
         // NOLINTNEXTLINE(readability-static-accessed-through-instance)
-        UInt32Value v = oid_pid.read(p, data + data_len - p);
+        UInt32Value v = OID_PID.read(p, data + data_len - p);
         ESP_LOGVV(TAG, "Packet ID: %d", v.value);
         if (v.value == this->last_pid_) {
           ESP_LOGV(TAG, "Packet ID %d already seen, skipping", v.value);
