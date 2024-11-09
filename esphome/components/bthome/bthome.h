@@ -51,7 +51,7 @@ struct ScanResult {
   const uint8_t *next_ptr;
 };
 
-using scan_func_t = ScanResult (const uint8_t *, size_t);
+using scan_func_t = ScanResult(const uint8_t *, size_t);
 
 
 template<size_t size_bytes> class OIDFixedSize {

@@ -13,7 +13,7 @@ namespace bthome {
 
 // TODO(badrpc): Switch to designated initializers if those become available
 // in C++.
-static scan_func_t * const oids[256] = {
+static scan_func_t *const oids[256] = {
     [0x00] = OIDUInt8::scan, OID_ENTRY(0x01),  OID_ENTRY(0x02),  OID_ENTRY(0x03),  OID_ENTRY(0x04),  OID_ENTRY(0x05),
     OID_ENTRY(0x06),         OID_ENTRY(0x07),  OID_ENTRY(0x08),  OID_ENTRY(0x09),  OID_ENTRY(0x0a),  OID_ENTRY(0x0b),
     OID_ENTRY(0x0c),         OID_ENTRY(0x0d),  OID_ENTRY(0x0e),  OID_ENTRY(0x0f),  OID_ENTRY(0x10),  OID_ENTRY(0x11),
