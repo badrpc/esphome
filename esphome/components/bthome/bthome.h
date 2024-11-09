@@ -200,8 +200,8 @@ class OIDBytes : public OIDVariableSize {
 
 // TODO(badrpc): add inline when it's supported (c++ 17).
 // 0x00    packet id   uint8 (1 byte)  0009    9
-constexpr uint8_t oid_pid_id = 0x00;
-constexpr OIDUInt8 oid_pid;
+constexpr uint8_t OID_PID_ID = 0x00;
+constexpr OIDUInt8 OID_PID;
 // 0x01    battery     uint8 (1 byte)  1   0161    97  %
 constexpr OIDUFixedPoint<1> OID_01;
 // 0x02    temperature     sint16 (2 bytes)    0.01    02CA09  25.06   °C

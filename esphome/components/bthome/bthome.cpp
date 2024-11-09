@@ -14,7 +14,7 @@ namespace bthome {
 // TODO(badrpc): Switch to designated initializers if those become available
 // in C++.
 // NOLINTBEGIN(clang-diagnostic-c99-designator)
-static scan_func_t *const oids[256] = {
+static scan_func_t *const OIDS[256] = {
     [0x00] = OIDUInt8::scan, OID_ENTRY(01),    OID_ENTRY(02),    OID_ENTRY(03),    OID_ENTRY(04),    OID_ENTRY(05),
     OID_ENTRY(06),           OID_ENTRY(07),    OID_ENTRY(08),    OID_ENTRY(09),    OID_ENTRY(0A),    OID_ENTRY(0B),
     OID_ENTRY(0C),           OID_ENTRY(0D),    OID_ENTRY(0E),    OID_ENTRY(0F),    OID_ENTRY(10),    OID_ENTRY(11),
@@ -282,7 +282,7 @@ bool BTHome::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
         continue;
       }
 
-      auto scan = oids[oid];
+      auto scan = OIDS[oid];
       if (scan == nullptr) {
         ESP_LOGW(TAG, "Unknown OID %#02x - parsing aborted", oid);
         break;
