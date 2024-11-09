@@ -12,7 +12,7 @@ namespace bthome {
 #define OID_ENTRY(oid) [oid] = OID_VAR(oid).scan
 
 static scan_func_t *oids[256] = {
-    [0x00] = oid_pid.scan, OID_ENTRY(0x01),  OID_ENTRY(0x02),  OID_ENTRY(0x03),  OID_ENTRY(0x04),  OID_ENTRY(0x05),
+    [0x00] = OIDUInt8::scan, OID_ENTRY(0x01),  OID_ENTRY(0x02),  OID_ENTRY(0x03),  OID_ENTRY(0x04),  OID_ENTRY(0x05),
     OID_ENTRY(0x06),       OID_ENTRY(0x07),  OID_ENTRY(0x08),  OID_ENTRY(0x09),  OID_ENTRY(0x0a),  OID_ENTRY(0x0b),
     OID_ENTRY(0x0c),       OID_ENTRY(0x0d),  OID_ENTRY(0x0e),  OID_ENTRY(0x0f),  OID_ENTRY(0x10),  OID_ENTRY(0x11),
     OID_ENTRY(0x12),       OID_ENTRY(0x13),  OID_ENTRY(0x14),  OID_ENTRY(0x15),  OID_ENTRY(0x16),  OID_ENTRY(0x17),
@@ -117,12 +117,12 @@ int32_t read_sint(size_t size, const uint8_t *data) {
 //         This represents the BTHome verion. Currently only BTHome version 1
 //         or 2 are allowed, where 2 is the latest version (bit 5-7 = 010).
 //
-struct device_information {
+struct DeviceInformation {
   bool encryption;
   bool trigger_based;
   uint8_t bthome_version;
 
-  device_information(uint8_t v) {
+  DeviceInformation(uint8_t v) {
     encryption = v & 0b000000001;
     trigger_based = (v & 0b00000100) >> 2;
     bthome_version = (v & 0b11100000) >> 5;
@@ -191,13 +191,13 @@ void BTHome::dump_config() {
            uint8_t((this->address_ >> 40) & 0x00000000000000ff), uint8_t((this->address_ >> 32) & 0x00000000000000ff),
            uint8_t((this->address_ >> 24) & 0x00000000000000ff), uint8_t((this->address_ >> 16) & 0x00000000000000ff),
            uint8_t((this->address_ >> 8) & 0x00000000000000ff), uint8_t((this->address_) & 0x00000000000000ff));
-  ESP_LOGCONFIG(TAG, bthome_mac);
+  ESP_LOGCONFIG(TAG, "%s", bthome_mac);
   if (this->encrypted_) {
     ESP_LOGCONFIG(TAG, "  Encryption key set");
   } else {
     ESP_LOGCONFIG(TAG, "  Encryption key not set");
   }
-  for (auto pub : this->publishers_) {
+  for (auto *pub : this->publishers_) {
     pub->log("  ");
   }
 }
@@ -211,16 +211,16 @@ bool BTHome::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
 
   bool success = false;
   for (auto &service_data : device.get_service_datas()) {
-    const auto BTHomeServiceDataUUID = 0xfcd2;
+    constexpr auto BTHomeServiceDataUUID = 0xfcd2;
     if (service_data.uuid != esp32_ble::ESPBTUUID::from_uint16(BTHomeServiceDataUUID)) {
       continue;
     }
-    if (service_data.data.size() < 1) {
+    if (service_data.data.empty()) {
       ESP_LOGW(TAG, "BTHome service data (UUID %#04x) without data (size %zd)", BTHomeServiceDataUUID,
                service_data.data.size());
       continue;
     }
-    device_information di(service_data.data[0]);
+    DeviceInformation di(service_data.data[0]);
     if (di.bthome_version != 2) {
       ESP_LOGW(TAG, "BTHome version %d is not supported (only version 2 is supported)", di.bthome_version);
       continue;
@@ -275,14 +275,14 @@ bool BTHome::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
         continue;
       }
 
-      const uint8_t *next_ptr = this->publish(oid, p, data + data_len - p);
+      const uint8_t *next_ptr = this->publish_(oid, p, data + data_len - p);
       if (next_ptr != nullptr) {
         p = next_ptr;
         continue;
       }
 
       auto scan = oids[oid];
-      if (scan == NULL) {
+      if (scan == nullptr) {
         ESP_LOGW(TAG, "Unknown OID %#02x - parsing aborted", oid);
         break;
       }
@@ -296,7 +296,7 @@ bool BTHome::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
   return success;
 }
 
-const uint8_t *BTHome::publish(uint8_t oid, const uint8_t *data, size_t size) {
+const uint8_t *BTHome::publish_(uint8_t oid, const uint8_t *data, size_t size) {
   for (auto pub : this->publishers_) {
     if (pub->oid() == oid) {
       return pub->publish(data, size);
@@ -305,11 +305,11 @@ const uint8_t *BTHome::publish(uint8_t oid, const uint8_t *data, size_t size) {
   return nullptr;
 }
 
-void BTHome::set_publisher(Publisher *publisher) {
-  for (int i = 0; i < this->publishers_.size(); i++) {
-    if (this->publishers_[i]->oid() == publisher->oid()) {
-      auto old = this->publishers_[i];
-      this->publishers_[i] = publisher;
+void BTHome::set_publisher_(Publisher *publisher) {
+  for (auto & p : this->publishers_) {
+    if (p->oid() == publisher->oid()) {
+      auto old = p;
+      p = publisher;
       delete old;
       return;
     }

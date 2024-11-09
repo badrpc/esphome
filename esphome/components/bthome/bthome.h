@@ -396,15 +396,15 @@ template<typename OID> class SensorPublisher : public Publisher {
  public:
   SensorPublisher(uint8_t oid, OID oid_def, sensor::Sensor *sensor)
       : Publisher(oid), oid_def_(oid_def), sensor_(sensor) {}
-  virtual ~SensorPublisher() {}
+  ~SensorPublisher() override {}
 
-  virtual const uint8_t *publish(const uint8_t *data, size_t size) {
+  const uint8_t *publish(const uint8_t *data, size_t size) override {
     FloatValue v = this->oid_def_.read(data, size);
     sensor_->publish_state(v.value);
     return v.next_ptr;
   }
 
-  virtual void log(const char *prefix) const {
+  void log(const char *prefix) const override {
     char oid_str[5];
     snprintf(oid_str, sizeof(oid_str), "%#04x", this->oid_);
     LOG_SENSOR(prefix, oid_str, this->sensor_);
@@ -421,15 +421,15 @@ class BinarySensorPublisher : public Publisher {
  public:
   BinarySensorPublisher(uint8_t oid, OIDBool oid_def, binary_sensor::BinarySensor *sensor)
       : Publisher(oid), oid_def_(oid_def), sensor_(sensor) {}
-  virtual ~BinarySensorPublisher() {}
+  ~BinarySensorPublisher() override {}
 
-  virtual const uint8_t *publish(const uint8_t *data, size_t size) {
+  const uint8_t *publish(const uint8_t *data, size_t size) override {
     BoolValue v = this->oid_def_.read(data, size);
     sensor_->publish_state(v.value);
     return v.next_ptr;
   }
 
-  virtual void log(const char *prefix) const {
+  void log(const char *prefix) const override {
     char oid_str[5];
     snprintf(oid_str, sizeof(oid_str), "%#04x", this->oid_);
     LOG_BINARY_SENSOR(prefix, oid_str, this->sensor_);
@@ -446,15 +446,15 @@ class TextSensorPublisher : public Publisher {
  public:
   TextSensorPublisher(uint8_t oid, OIDBytes oid_def, text_sensor::TextSensor *sensor)
       : Publisher(oid), oid_def_(oid_def), sensor_(sensor) {}
-  virtual ~TextSensorPublisher() {}
+  ~TextSensorPublisher() override {}
 
-  virtual const uint8_t *publish(const uint8_t *data, size_t size) {
+  const uint8_t *publish(const uint8_t *data, size_t size) override {
     StringValue v = this->oid_def_.read(data, size);
     sensor_->publish_state(v.value);
     return v.next_ptr;
   }
 
-  virtual void log(const char *prefix) const {
+  void log(const char *prefix) const override {
     char oid_str[5];
     snprintf(oid_str, sizeof(oid_str), "%#04x", this->oid_);
     LOG_BINARY_SENSOR(prefix, oid_str, this->sensor_);
@@ -477,25 +477,25 @@ class BTHome : public Component, public esp32_ble_tracker::ESPBTDeviceListener {
 
 #ifdef USE_BINARY_SENSOR
   template<typename T> void register_binary_sensor(uint8_t oid, T oid_def, binary_sensor::BinarySensor *binary_sensor) {
-    this->set_publisher(new BinarySensorPublisher(oid, oid_def, binary_sensor));
+    this->set_publisher_(new BinarySensorPublisher(oid, oid_def, binary_sensor));
   }
 #endif
 
 #ifdef USE_SENSOR
   template<typename T> void register_sensor(uint8_t oid, T oid_def, sensor::Sensor *sensor) {
-    this->set_publisher(new SensorPublisher<T>(oid, oid_def, sensor));
+    this->set_publisher_(new SensorPublisher<T>(oid, oid_def, sensor));
   }
 #endif
 
 #ifdef USE_TEXT_SENSOR
   template<typename T> void register_text_sensor(uint8_t oid, T oid_def, text_sensor::TextSensor *text_sensor) {
-    this->set_publisher(new TextSensorPublisher(oid, oid_def, text_sensor));
+    this->set_publisher_(new TextSensorPublisher(oid, oid_def, text_sensor));
   }
 #endif
 
  protected:
-  const uint8_t *publish(uint8_t oid, const uint8_t *data, size_t size);
-  void set_publisher(Publisher *publisher);
+  const uint8_t *publish_(uint8_t oid, const uint8_t *data, size_t size);
+  void set_publisher_(Publisher *publisher);
 
   uint64_t address_;
   bool encrypted_{false};
