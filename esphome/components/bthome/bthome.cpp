@@ -156,18 +156,9 @@ int decrypt(const uint8_t *data, ssize_t data_len, const uint8_t *mac_address, u
   // TODO(badrpc): Switch to designated initializers if those become available
   // in C++.
   uint8_t nonce[] = {
-      mac_address[0x00],
-      mac_address[0x01],
-      mac_address[0x02],
-      mac_address[0x03],
-      mac_address[0x04],
-      mac_address[0x05],
-      (uint8_t) (uuid & 0xff),
-      (uint8_t) ((uuid >> 8) & 0xff),
-      data[0x00],
-      data[data_len - 8],
-      data[data_len - 7],
-      data[data_len - 6],
+      mac_address[0x00],  mac_address[0x01],  mac_address[0x02],       mac_address[0x03],
+      mac_address[0x04],  mac_address[0x05],  (uint8_t) (uuid & 0xff), (uint8_t) ((uuid >> 8) & 0xff),
+      data[0x00],         data[data_len - 8], data[data_len - 7],      data[data_len - 6],
       data[data_len - 5],
   };
 
