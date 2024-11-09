@@ -46,7 +46,7 @@ def unique_oid(config):
 
 
 def oid_variable(oid: int):
-    return cg.RawExpression(f"bthome::oid_{oid:#04x}")
+    return cg.RawExpression(f"bthome::OID_{oid:02X}")
 
 
 async def to_code(config):

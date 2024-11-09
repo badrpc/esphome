@@ -188,6 +188,7 @@ class OIDBytes : public OIDVariableSize {
     ScanResult sr = OIDVariableSize::scan(data, size);
     if (sr.value_ptr == nullptr || sr.value_size == 0) {
       return StringValue{
+          .value = std::string(),
           .next_ptr = sr.next_ptr,
       };
     }
