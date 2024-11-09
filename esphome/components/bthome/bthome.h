@@ -393,6 +393,7 @@ class Publisher {
   uint8_t oid_;
 };
 
+#ifdef USE_SENSOR
 template <typename OID>
 class SensorPublisher: public Publisher {
  public:
@@ -415,7 +416,9 @@ class SensorPublisher: public Publisher {
   OID oid_def_;
   sensor::Sensor *sensor_;
 };
+#endif
 
+#ifdef USE_BINARY_SENSOR
 class BinarySensorPublisher: public Publisher {
  public:
   BinarySensorPublisher(uint8_t oid, OIDBool oid_def, binary_sensor::BinarySensor* sensor): Publisher(oid), oid_def_(oid_def), sensor_(sensor) {}
@@ -437,7 +440,9 @@ class BinarySensorPublisher: public Publisher {
   OIDBool oid_def_;
   binary_sensor::BinarySensor *sensor_;
 };
+#endif
 
+#ifdef USE_TEXT_SENSOR
 class TextSensorPublisher: public Publisher {
  public:
   TextSensorPublisher(uint8_t oid, OIDBytes oid_def, text_sensor::TextSensor* sensor): Publisher(oid), oid_def_(oid_def), sensor_(sensor) {}
@@ -459,6 +464,7 @@ class TextSensorPublisher: public Publisher {
   OIDBytes oid_def_;
   text_sensor::TextSensor *sensor_;
 };
+#endif
 
 class BTHome : public Component, public esp32_ble_tracker::ESPBTDeviceListener {
  public:
