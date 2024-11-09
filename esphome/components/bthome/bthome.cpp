@@ -209,12 +209,12 @@ bool BTHome::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
 
   bool success = false;
   for (auto &service_data : device.get_service_datas()) {
-    constexpr auto BTHomeServiceDataUUID = 0xfcd2;
-    if (service_data.uuid != esp32_ble::ESPBTUUID::from_uint16(BTHomeServiceDataUUID)) {
+    constexpr auto bthome_service_data_uuid = 0xfcd2;
+    if (service_data.uuid != esp32_ble::ESPBTUUID::from_uint16(bthome_service_data_uuid)) {
       continue;
     }
     if (service_data.data.empty()) {
-      ESP_LOGW(TAG, "BTHome service data (UUID %#04x) without data (size %zd)", BTHomeServiceDataUUID,
+      ESP_LOGW(TAG, "BTHome service data (UUID %#04x) without data (size %zd)", bthome_service_data_uuid,
                service_data.data.size());
       continue;
     }
@@ -241,7 +241,7 @@ bool BTHome::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
       }
       this->last_counter_ = counter;
       const auto keybits = sizeof(this->encryption_key_) / sizeof(this->encryption_key_[0]) * 8;
-      int ret = decrypt(service_data.data.data(), service_data.data.size(), device.address(), BTHomeServiceDataUUID,
+      int ret = decrypt(service_data.data.data(), service_data.data.size(), device.address(), bthome_service_data_uuid,
                         this->encryption_key_, keybits, cleartext);
       if (ret) {
         ESP_LOGE(TAG, "Could not decrypt packet, error code: %04x", ret);
@@ -262,6 +262,7 @@ bool BTHome::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
       ESP_LOGVV(TAG, "Processing OID %#02x", oid);
 
       if (oid == oid_pid_id) {
+        // NOLINTNEXTLINE(readability-static-accessed-through-instance)
         UInt32Value v = oid_pid.read(p, data + data_len - p);
         ESP_LOGVV(TAG, "Packet ID: %d", v.value);
         if (v.value == this->last_pid_) {
