@@ -16,10 +16,14 @@ DEPENDENCIES = ["bthome"]
 CONFIG_SCHEMA = (
     binary_sensor.binary_sensor_schema(
         binary_sensor.BinarySensor,
-    ).extend({
-        cv.GenerateID(CONF_BTHOME_ID): cv.use_id(BTHome),
-        cv.Required(CONF_OID): oid_range_validate,
-    }).extend(cv.COMPONENT_SCHEMA)
+    )
+    .extend(
+        {
+            cv.GenerateID(CONF_BTHOME_ID): cv.use_id(BTHome),
+            cv.Required(CONF_OID): oid_range_validate,
+        }
+    )
+    .extend(cv.COMPONENT_SCHEMA)
 )
 
 FINAL_VALIDATE_SCHEMA = unique_oid

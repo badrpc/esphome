@@ -20,7 +20,8 @@ namespace bthome {
 
 constexpr const char *const TAG = "bthome";
 
-int decrypt(const uint8_t *data, ssize_t data_len, const uint8_t *mac_address, uint16_t uuid, const uint8_t *key, ssize_t keybits, uint8_t *cleartext);
+int decrypt(const uint8_t *data, ssize_t data_len, const uint8_t *mac_address, uint16_t uuid, const uint8_t *key,
+            ssize_t keybits, uint8_t *cleartext);
 uint32_t read_uint(size_t size, const uint8_t *data);
 int32_t read_sint(size_t size, const uint8_t *data);
 
@@ -52,76 +53,73 @@ struct ScanResult {
 
 typedef ScanResult scan_func_t(const uint8_t *data, size_t size);
 
-template <size_t size_bytes>
-class OIDFixedSize {
+template<size_t size_bytes> class OIDFixedSize {
  public:
   static ScanResult scan(const uint8_t *data, size_t size) {
     if (size < size_bytes) {
-        return ScanResult {
+      return ScanResult {
           .value_ptr = nullptr,
           .value_size = 0,
           .next_ptr = data + size,
-        };
+      };
     }
-    return ScanResult {
-      .value_ptr = data,
-      .value_size = size_bytes,
-      .next_ptr = data + size_bytes,
+    return ScanResult{
+        .value_ptr = data,
+        .value_size = size_bytes,
+        .next_ptr = data + size_bytes,
     };
   }
 };
 
-class OIDBool: public OIDFixedSize <1> {
+class OIDBool : public OIDFixedSize <1> {
  public:
   static BoolValue read(const uint8_t *data, size_t size) {
     ScanResult sr = OIDBool::scan(data, size);
     if (sr.value_ptr == nullptr || sr.value_size == 0) {
-      return BoolValue {
-        .value = false,
-        .next_ptr = sr.next_ptr,
+      return BoolValue{
+          .value = false,
+          .next_ptr = sr.next_ptr,
       };
     }
     return BoolValue {
-      .value = read_uint(sr.value_size, sr.value_ptr) != 0,
-      .next_ptr = sr.next_ptr,
+        .value = read_uint(sr.value_size, sr.value_ptr) != 0,
+        .next_ptr = sr.next_ptr,
     };
   }
 };
 
-template <size_t size_bytes>
-class OIDUInt: public OIDFixedSize <size_bytes> {
+template<size_t size_bytes> class OIDUInt : public OIDFixedSize <size_bytes> {
  public:
   static UInt32Value read(const uint8_t *data, size_t size) {
     ScanResult sr = OIDUInt::scan(data, size);
     if (sr.value_ptr == nullptr || sr.value_size == 0) {
       return UInt32Value {
-        .value = 0,
-        .next_ptr = sr.next_ptr,
+          .value = 0,
+          .next_ptr = sr.next_ptr,
       };
     }
     return UInt32Value {
-      .value = read_uint(sr.value_size, sr.value_ptr),
-      .next_ptr = sr.next_ptr,
+        .value = read_uint(sr.value_size, sr.value_ptr),
+        .next_ptr = sr.next_ptr,
     };
   }
 };
 
-template <size_t size_bytes>
-class OIDSFixedPoint: public OIDFixedSize <size_bytes> {
+template<size_t size_bytes> class OIDSFixedPoint : public OIDFixedSize <size_bytes> {
  public:
-  constexpr OIDSFixedPoint(float factor=1.0): factor_(factor) {}
+  constexpr OIDSFixedPoint(float factor = 1.0) : factor_(factor) {}
 
   FloatValue read(const uint8_t *data, size_t size) const {
     ScanResult sr = OIDSFixedPoint::scan(data, size);
     if (sr.value_ptr == nullptr || sr.value_size == 0) {
       return FloatValue {
-        .value = 0.0,
-        .next_ptr = sr.next_ptr,
+          .value = 0.0,
+          .next_ptr = sr.next_ptr,
       };
     }
     return FloatValue {
-      .value = read_sint(sr.value_size, sr.value_ptr) * this->factor_,
-      .next_ptr = sr.next_ptr,
+        .value = read_sint(sr.value_size, sr.value_ptr) * this->factor_,
+        .next_ptr = sr.next_ptr,
     };
   }
 
@@ -129,22 +127,21 @@ class OIDSFixedPoint: public OIDFixedSize <size_bytes> {
   float factor_;
 };
 
-template <size_t size_bytes>
-class OIDUFixedPoint: public OIDFixedSize <size_bytes> {
+template<size_t size_bytes> class OIDUFixedPoint : public OIDFixedSize<size_bytes> {
  public:
-  constexpr OIDUFixedPoint(float factor=1.0): factor_(factor) {}
+  constexpr OIDUFixedPoint(float factor = 1.0) : factor_(factor) {}
 
   FloatValue read(const uint8_t *data, size_t size) const {
     ScanResult sr = OIDUFixedPoint::scan(data, size);
     if (sr.value_ptr == nullptr || sr.value_size == 0) {
       return FloatValue {
-        .value = 0.0,
-        .next_ptr = sr.next_ptr,
+          .value = 0.0,
+          .next_ptr = sr.next_ptr,
       };
     }
     return FloatValue {
-      .value = read_uint(sr.value_size, sr.value_ptr) * this->factor_,
-      .next_ptr = sr.next_ptr,
+        .value = read_uint(sr.value_size, sr.value_ptr) * this->factor_,
+        .next_ptr = sr.next_ptr,
     };
   }
 
@@ -161,48 +158,49 @@ class OIDVariableSize {
  public:
   static ScanResult scan(const uint8_t *data, size_t size) {
     if (size < 1) {
-        return ScanResult {
+      return ScanResult {
           .value_ptr = nullptr,
           .value_size = 0,
           .next_ptr = data + size,
-        };
+      };
     }
     size_t size_bytes = *data;
     size--;
     data++;
     if (size < size_bytes) {
-        return ScanResult {
+      return ScanResult {
           .value_ptr = nullptr,
           .value_size = 0,
           .next_ptr = data + size,
-        };
+      };
     }
     return ScanResult {
-      .value_ptr = data,
-      .value_size = size_bytes,
-      .next_ptr = data + size_bytes,
+        .value_ptr = data,
+        .value_size = size_bytes,
+        .next_ptr = data + size_bytes,
     };
   }
 };
 
-class OIDBytes: public OIDVariableSize {
+class OIDBytes : public OIDVariableSize {
  public:
   StringValue read(const uint8_t *data, size_t size) const {
     ScanResult sr = OIDVariableSize::scan(data, size);
     if (sr.value_ptr == nullptr || sr.value_size == 0) {
       return StringValue {
-        .next_ptr = sr.next_ptr,
+          .next_ptr = sr.next_ptr,
       };
     }
     return StringValue {
-      .value = std::string((const char*)sr.value_ptr, sr.value_size),
-      .next_ptr = sr.next_ptr,
+        .value = std::string((const char*)sr.value_ptr, sr.value_size),
+        .next_ptr = sr.next_ptr,
     };
   }
 };
 
 // TODO(badrpc): add inline when it's supported (c++ 17).
 // 0x00    packet id   uint8 (1 byte)  0009    9
+constexpr uint8_t oid_pid_id = 0x00;
 constexpr OIDUInt8 oid_pid;
 // 0x01    battery     uint8 (1 byte)  1   0161    97  %
 constexpr OIDUFixedPoint<1> oid_0x01;
@@ -383,21 +381,21 @@ constexpr OIDUInt24 oid_0xf2;
 
 class Publisher {
  public:
-  Publisher(uint8_t oid): oid_(oid) {}
+  Publisher(uint8_t oid) : oid_(oid) {}
   virtual ~Publisher() {}
   uint8_t oid() const { return this->oid_; }
   virtual const uint8_t *publish(const uint8_t *data, size_t size) = 0;
-  virtual void log(const char* prefix) const = 0;
+  virtual void log(const char *prefix) const = 0;
 
  protected:
   uint8_t oid_;
 };
 
 #ifdef USE_SENSOR
-template <typename OID>
-class SensorPublisher: public Publisher {
+template<typename OID> class SensorPublisher : public Publisher {
  public:
-  SensorPublisher(uint8_t oid, OID oid_def, sensor::Sensor* sensor): Publisher(oid), oid_def_(oid_def), sensor_(sensor) {}
+  SensorPublisher(uint8_t oid, OID oid_def, sensor::Sensor* sensor)
+      : Publisher(oid), oid_def_(oid_def), sensor_(sensor) {}
   virtual ~SensorPublisher() {}
 
   virtual const uint8_t *publish(const uint8_t *data, size_t size) {
@@ -406,7 +404,7 @@ class SensorPublisher: public Publisher {
     return v.next_ptr;
   }
 
-  virtual void log(const char* prefix) const {
+  virtual void log(const char *prefix) const {
     char oid_str[5];
     snprintf(oid_str, sizeof(oid_str), "%#04x", this->oid_);
     LOG_SENSOR(prefix, oid_str, this->sensor_);
@@ -419,9 +417,10 @@ class SensorPublisher: public Publisher {
 #endif
 
 #ifdef USE_BINARY_SENSOR
-class BinarySensorPublisher: public Publisher {
+class BinarySensorPublisher : public Publisher {
  public:
-  BinarySensorPublisher(uint8_t oid, OIDBool oid_def, binary_sensor::BinarySensor* sensor): Publisher(oid), oid_def_(oid_def), sensor_(sensor) {}
+  BinarySensorPublisher(uint8_t oid, OIDBool oid_def, binary_sensor::BinarySensor* sensor)
+      : Publisher(oid), oid_def_(oid_def), sensor_(sensor) {}
   virtual ~BinarySensorPublisher() {}
 
   virtual const uint8_t *publish(const uint8_t *data, size_t size) {
@@ -430,7 +429,7 @@ class BinarySensorPublisher: public Publisher {
     return v.next_ptr;
   }
 
-  virtual void log(const char* prefix) const {
+  virtual void log(const char *prefix) const {
     char oid_str[5];
     snprintf(oid_str, sizeof(oid_str), "%#04x", this->oid_);
     LOG_BINARY_SENSOR(prefix, oid_str, this->sensor_);
@@ -443,9 +442,10 @@ class BinarySensorPublisher: public Publisher {
 #endif
 
 #ifdef USE_TEXT_SENSOR
-class TextSensorPublisher: public Publisher {
+class TextSensorPublisher : public Publisher {
  public:
-  TextSensorPublisher(uint8_t oid, OIDBytes oid_def, text_sensor::TextSensor* sensor): Publisher(oid), oid_def_(oid_def), sensor_(sensor) {}
+  TextSensorPublisher(uint8_t oid, OIDBytes oid_def, text_sensor::TextSensor* sensor)
+      : Publisher(oid), oid_def_(oid_def), sensor_(sensor) {}
   virtual ~TextSensorPublisher() {}
 
   virtual const uint8_t *publish(const uint8_t *data, size_t size) {
@@ -454,7 +454,7 @@ class TextSensorPublisher: public Publisher {
     return v.next_ptr;
   }
 
-  virtual void log(const char* prefix) const {
+  virtual void log(const char *prefix) const {
     char oid_str[5];
     snprintf(oid_str, sizeof(oid_str), "%#04x", this->oid_);
     LOG_BINARY_SENSOR(prefix, oid_str, this->sensor_);
@@ -476,22 +476,19 @@ class BTHome : public Component, public esp32_ble_tracker::ESPBTDeviceListener {
   float get_setup_priority() const override { return setup_priority::DATA; }
 
 #ifdef USE_BINARY_SENSOR
-  template <typename T>
-  void register_binary_sensor(uint8_t oid, T oid_def, binary_sensor::BinarySensor *binary_sensor) {
+  template<typename T> void register_binary_sensor(uint8_t oid, T oid_def, binary_sensor::BinarySensor *binary_sensor) {
     this->set_publisher(new BinarySensorPublisher(oid, oid_def, binary_sensor));
   }
 #endif
 
 #ifdef USE_SENSOR
-  template <typename T>
-  void register_sensor(uint8_t oid, T oid_def, sensor::Sensor *sensor) {
+  template<typename T> void register_sensor(uint8_t oid, T oid_def, sensor::Sensor *sensor) {
     this->set_publisher(new SensorPublisher<T>(oid, oid_def, sensor));
   }
 #endif
 
 #ifdef USE_TEXT_SENSOR
-  template <typename T>
-  void register_text_sensor(uint8_t oid, T oid_def, text_sensor::TextSensor *text_sensor) {
+  template<typename T> void register_text_sensor(uint8_t oid, T oid_def, text_sensor::TextSensor *text_sensor) {
     this->set_publisher(new TextSensorPublisher(oid, oid_def, text_sensor));
   }
 #endif
@@ -504,7 +501,7 @@ class BTHome : public Component, public esp32_ble_tracker::ESPBTDeviceListener {
   bool encrypted_{false};
   uint8_t encryption_key_[16];
 
-  int16_t last_pid_{-1}; // -1 indicates that no packets have been received yet.
+  int16_t last_pid_{-1};  // -1 indicates that no PID has been observed yet.
   uint32_t last_counter_{0};
 
   std::vector <Publisher*> publishers_;

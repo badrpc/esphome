@@ -16,10 +16,14 @@ DEPENDENCIES = ["bthome"]
 CONFIG_SCHEMA = (
     sensor.sensor_schema(
         sensor.Sensor,
-    ).extend({
-        cv.GenerateID(CONF_BTHOME_ID): cv.use_id(BTHome),
-        cv.Required(CONF_OID): oid_range_validate,
-    }).extend(cv.COMPONENT_SCHEMA)
+    )
+    .extend(
+        {
+            cv.GenerateID(CONF_BTHOME_ID): cv.use_id(BTHome),
+            cv.Required(CONF_OID): oid_range_validate,
+        }
+    )
+    .extend(cv.COMPONENT_SCHEMA)
 )
 
 FINAL_VALIDATE_SCHEMA = unique_oid
@@ -28,4 +32,6 @@ FINAL_VALIDATE_SCHEMA = unique_oid
 async def to_code(config):
     parent = await cg.get_variable(config[CONF_BTHOME_ID])
     sens = await sensor.new_sensor(config)
-    cg.add(parent.register_sensor(config[CONF_OID], oid_variable(config[CONF_OID]), sens))
+    cg.add(
+        parent.register_sensor(config[CONF_OID], oid_variable(config[CONF_OID]), sens)
+    )

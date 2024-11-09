@@ -16,11 +16,13 @@ bthome_ns = cg.esphome_ns.namespace("bthome")
 BTHome = bthome_ns.class_("BTHome", esp32_ble_tracker.ESPBTDeviceListener, cg.Component)
 
 CONFIG_SCHEMA = (
-    cv.Schema({
-        cv.GenerateID(): cv.declare_id(BTHome),
-        cv.Optional(CONF_ENCRYPTION_KEY): cv.bind_key,
-        cv.Required(CONF_MAC_ADDRESS): cv.mac_address,
-    })
+    cv.Schema(
+        {
+            cv.GenerateID(): cv.declare_id(BTHome),
+            cv.Optional(CONF_ENCRYPTION_KEY): cv.bind_key,
+            cv.Required(CONF_MAC_ADDRESS): cv.mac_address,
+        }
+    )
     .extend(esp32_ble_tracker.ESP_BLE_DEVICE_SCHEMA)
     .extend(cv.COMPONENT_SCHEMA)
 )
@@ -37,7 +39,9 @@ def unique_oid(config):
     current_id = config[CONF_ID]
     prev_id = CONFIGURED_OIDS.get((bthome_id, oid), "")
     if prev_id != "":
-        raise cv.Invalid(f"BTHome entities {prev_id} and {current_id} reuse the same OID {oid:#04x}")
+        raise cv.Invalid(
+            f"BTHome entities {prev_id} and {current_id} reuse the same OID {oid:#04x}"
+        )
     CONFIGURED_OIDS[(bthome_id, oid)] = current_id
 
 
