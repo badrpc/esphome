@@ -8,27 +8,28 @@
 namespace esphome {
 namespace bthome {
 
-#define OID_VAR(oid) oid_##oid
-#define OID_ENTRY(oid) [oid] = OID_VAR(oid).scan
+#define OID_VAR(oid) OID_##oid
+#define OID_ENTRY(oid) [0x##oid] = OID_VAR(oid).scan
 
 // TODO(badrpc): Switch to designated initializers if those become available
 // in C++.
+// NOLINTBEGIN(clang-diagnostic-c99-designator)
 static scan_func_t *const oids[256] = {
-    [0x00] = OIDUInt8::scan, OID_ENTRY(0x01),  OID_ENTRY(0x02),  OID_ENTRY(0x03),  OID_ENTRY(0x04),  OID_ENTRY(0x05),
-    OID_ENTRY(0x06),         OID_ENTRY(0x07),  OID_ENTRY(0x08),  OID_ENTRY(0x09),  OID_ENTRY(0x0a),  OID_ENTRY(0x0b),
-    OID_ENTRY(0x0c),         OID_ENTRY(0x0d),  OID_ENTRY(0x0e),  OID_ENTRY(0x0f),  OID_ENTRY(0x10),  OID_ENTRY(0x11),
-    OID_ENTRY(0x12),         OID_ENTRY(0x13),  OID_ENTRY(0x14),  OID_ENTRY(0x15),  OID_ENTRY(0x16),  OID_ENTRY(0x17),
-    OID_ENTRY(0x18),         OID_ENTRY(0x19),  OID_ENTRY(0x1a),  OID_ENTRY(0x1b),  OID_ENTRY(0x1c),  OID_ENTRY(0x1d),
-    OID_ENTRY(0x1e),         OID_ENTRY(0x1f),  OID_ENTRY(0x20),  OID_ENTRY(0x21),  OID_ENTRY(0x22),  OID_ENTRY(0x23),
-    OID_ENTRY(0x24),         OID_ENTRY(0x25),  OID_ENTRY(0x26),  OID_ENTRY(0x27),  OID_ENTRY(0x28),  OID_ENTRY(0x29),
-    OID_ENTRY(0x2a),         OID_ENTRY(0x2b),  OID_ENTRY(0x2c),  OID_ENTRY(0x2d),  [0x2e] = nullptr, [0x2f] = nullptr,
+    [0x00] = OIDUInt8::scan, OID_ENTRY(01),    OID_ENTRY(02),    OID_ENTRY(03),    OID_ENTRY(04),    OID_ENTRY(05),
+    OID_ENTRY(06),           OID_ENTRY(07),    OID_ENTRY(08),    OID_ENTRY(09),    OID_ENTRY(0A),    OID_ENTRY(0B),
+    OID_ENTRY(0C),           OID_ENTRY(0D),    OID_ENTRY(0E),    OID_ENTRY(0F),    OID_ENTRY(10),    OID_ENTRY(11),
+    OID_ENTRY(12),           OID_ENTRY(13),    OID_ENTRY(14),    OID_ENTRY(15),    OID_ENTRY(16),    OID_ENTRY(17),
+    OID_ENTRY(18),           OID_ENTRY(19),    OID_ENTRY(1A),    OID_ENTRY(1B),    OID_ENTRY(1C),    OID_ENTRY(1D),
+    OID_ENTRY(1E),           OID_ENTRY(1F),    OID_ENTRY(20),    OID_ENTRY(21),    OID_ENTRY(22),    OID_ENTRY(23),
+    OID_ENTRY(24),           OID_ENTRY(25),    OID_ENTRY(26),    OID_ENTRY(27),    OID_ENTRY(28),    OID_ENTRY(29),
+    OID_ENTRY(2A),           OID_ENTRY(2B),    OID_ENTRY(2C),    OID_ENTRY(2D),    [0x2e] = nullptr, [0x2f] = nullptr,
     [0x30] = nullptr,        [0x31] = nullptr, [0x32] = nullptr, [0x33] = nullptr, [0x34] = nullptr, [0x35] = nullptr,
-    [0x36] = nullptr,        [0x37] = nullptr, [0x38] = nullptr, [0x39] = nullptr, OID_ENTRY(0x3a),  [0x3b] = nullptr,
-    OID_ENTRY(0x3c),         OID_ENTRY(0x3d),  OID_ENTRY(0x3e),  OID_ENTRY(0x3f),  OID_ENTRY(0x40),  OID_ENTRY(0x41),
-    OID_ENTRY(0x42),         OID_ENTRY(0x43),  OID_ENTRY(0x44),  OID_ENTRY(0x45),  OID_ENTRY(0x46),  OID_ENTRY(0x47),
-    OID_ENTRY(0x48),         OID_ENTRY(0x49),  OID_ENTRY(0x4a),  OID_ENTRY(0x4b),  OID_ENTRY(0x4c),  OID_ENTRY(0x4d),
-    OID_ENTRY(0x4e),         OID_ENTRY(0x4f),  OID_ENTRY(0x50),  OID_ENTRY(0x51),  OID_ENTRY(0x52),  OID_ENTRY(0x53),
-    OID_ENTRY(0x54),         OID_ENTRY(0x55),  [0x56] = nullptr, [0x57] = nullptr, [0x58] = nullptr, [0x59] = nullptr,
+    [0x36] = nullptr,        [0x37] = nullptr, [0x38] = nullptr, [0x39] = nullptr, OID_ENTRY(3A),    [0x3b] = nullptr,
+    OID_ENTRY(3C),           OID_ENTRY(3D),    OID_ENTRY(3E),    OID_ENTRY(3F),    OID_ENTRY(40),    OID_ENTRY(41),
+    OID_ENTRY(42),           OID_ENTRY(43),    OID_ENTRY(44),    OID_ENTRY(45),    OID_ENTRY(46),    OID_ENTRY(47),
+    OID_ENTRY(48),           OID_ENTRY(49),    OID_ENTRY(4A),    OID_ENTRY(4B),    OID_ENTRY(4C),    OID_ENTRY(4D),
+    OID_ENTRY(4E),           OID_ENTRY(4F),    OID_ENTRY(50),    OID_ENTRY(51),    OID_ENTRY(52),    OID_ENTRY(53),
+    OID_ENTRY(54),           OID_ENTRY(55),    [0x56] = nullptr, [0x57] = nullptr, [0x58] = nullptr, [0x59] = nullptr,
     [0x5a] = nullptr,        [0x5b] = nullptr, [0x5c] = nullptr, [0x5d] = nullptr, [0x5e] = nullptr, [0x5f] = nullptr,
     [0x60] = nullptr,        [0x61] = nullptr, [0x62] = nullptr, [0x63] = nullptr, [0x64] = nullptr, [0x65] = nullptr,
     [0x66] = nullptr,        [0x67] = nullptr, [0x68] = nullptr, [0x69] = nullptr, [0x6a] = nullptr, [0x6b] = nullptr,
@@ -54,10 +55,11 @@ static scan_func_t *const oids[256] = {
     [0xde] = nullptr,        [0xdf] = nullptr, [0xe0] = nullptr, [0xe1] = nullptr, [0xe2] = nullptr, [0xe3] = nullptr,
     [0xe4] = nullptr,        [0xe5] = nullptr, [0xe6] = nullptr, [0xe7] = nullptr, [0xe8] = nullptr, [0xe9] = nullptr,
     [0xea] = nullptr,        [0xeb] = nullptr, [0xec] = nullptr, [0xed] = nullptr, [0xee] = nullptr, [0xef] = nullptr,
-    [0xf0] = nullptr,        OID_ENTRY(0xf1),  OID_ENTRY(0xf2),  [0xf3] = nullptr, [0xf4] = nullptr, [0xf5] = nullptr,
+    [0xf0] = nullptr,        OID_ENTRY(F1),    OID_ENTRY(F2),    [0xf3] = nullptr, [0xf4] = nullptr, [0xf5] = nullptr,
     [0xf6] = nullptr,        [0xf7] = nullptr, [0xf8] = nullptr, [0xf9] = nullptr, [0xfa] = nullptr, [0xfb] = nullptr,
     [0xfc] = nullptr,        [0xfd] = nullptr, [0xfe] = nullptr, [0xff] = nullptr,
 };
+// NOLINTEND(clang-diagnostic-c99-designator)
 
 uint32_t read_uint(size_t size, const uint8_t *data) {
   if (size < 1 || size > 4) {
