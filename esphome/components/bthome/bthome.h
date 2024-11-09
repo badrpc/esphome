@@ -8,6 +8,9 @@
 #ifdef USE_SENSOR
 #include "esphome/components/sensor/sensor.h"
 #endif
+#ifdef USE_TEXT_SENSOR
+#include "esphome/components/text_sensor/text_sensor.h"
+#endif
 #include "esphome/core/component.h"
 
 #ifdef USE_ESP32
@@ -33,6 +36,11 @@ struct UInt32Value {
 
 struct FloatValue {
   float value;
+  const uint8_t *next_ptr;
+};
+
+struct StringValue {
+  std::string value;
   const uint8_t *next_ptr;
 };
 
@@ -148,6 +156,50 @@ using OIDUInt8 = OIDUInt<1>;
 using OIDUInt16 = OIDUInt<2>;
 using OIDUInt24 = OIDUInt<3>;
 using OIDUInt32 = OIDUInt<4>;
+
+class OIDVariableSize {
+ public:
+  static ScanResult scan(const uint8_t *data, size_t size) {
+    if (size < 1) {
+        return ScanResult {
+          .value_ptr = nullptr,
+          .value_size = 0,
+          .next_ptr = data + size,
+        };
+    }
+    size_t size_bytes = *data;
+    size--;
+    data++;
+    if (size < size_bytes) {
+        return ScanResult {
+          .value_ptr = nullptr,
+          .value_size = 0,
+          .next_ptr = data + size,
+        };
+    }
+    return ScanResult {
+      .value_ptr = data,
+      .value_size = size_bytes,
+      .next_ptr = data + size_bytes,
+    };
+  }
+};
+
+class OIDBytes: public OIDVariableSize {
+ public:
+  StringValue read(const uint8_t *data, size_t size) const {
+    ScanResult sr = OIDVariableSize::scan(data, size);
+    if (sr.value_ptr == nullptr || sr.value_size == 0) {
+      return StringValue {
+        .next_ptr = sr.next_ptr,
+      };
+    }
+    return StringValue {
+      .value = std::string((const char*)sr.value_ptr, sr.value_size),
+      .next_ptr = sr.next_ptr,
+    };
+  }
+};
 
 // TODO(badrpc): add inline when it's supported (c++ 17).
 // 0x00    packet id   uint8 (1 byte)  0009    9
@@ -311,11 +363,9 @@ constexpr OIDUFixedPoint<2> oid_0x51(0.001);
 // 0x52    gyroscope   uint16 (2 bytes)    0.001   528756  22.151  °/s
 constexpr OIDUFixedPoint<2> oid_0x52(0.001);
 // 0x53    text    see below   -   530C48656C6C6F 20576F726C6421   Hello World!
-// TODO(badrpc): Implement variable size type and figure out how to wire it
-// into ESPHome (text sensor?).
+constexpr OIDBytes oid_0x53;
 // 0x54    raw     see below   -   540C48656C6C6F 20576F726C6421   48656c6c6f20 576f726c6421
-// TODO(badrpc): Implement variable size type and figure out how to wire it
-// into ESPHome (text sensor?).
+constexpr OIDBytes oid_0x54;
 // 0x55    volume storage  uint32 (4 bytes)    0.001   5587562A01  19551.879   L
 constexpr OIDUFixedPoint<4> oid_0x55(0.001);
 // 0x56 - 0xef - not defined
@@ -388,6 +438,28 @@ class BinarySensorPublisher: public Publisher {
   binary_sensor::BinarySensor *sensor_;
 };
 
+class TextSensorPublisher: public Publisher {
+ public:
+  TextSensorPublisher(uint8_t oid, OIDBytes oid_def, text_sensor::TextSensor* sensor): Publisher(oid), oid_def_(oid_def), sensor_(sensor) {}
+  virtual ~TextSensorPublisher() {}
+
+  virtual const uint8_t *publish(const uint8_t *data, size_t size) {
+    StringValue v = this->oid_def_.read(data, size);
+    sensor_->publish_state(v.value);
+    return v.next_ptr;
+  }
+
+  virtual void log(const char* prefix) const {
+    char oid_str[5];
+    snprintf(oid_str, sizeof(oid_str), "%#04x", this->oid_);
+    LOG_BINARY_SENSOR(prefix, oid_str, this->sensor_);
+  }
+
+ protected:
+  OIDBytes oid_def_;
+  text_sensor::TextSensor *sensor_;
+};
+
 class BTHome : public Component, public esp32_ble_tracker::ESPBTDeviceListener {
  public:
   void set_address(uint64_t address) { this->address_ = address; };
@@ -408,6 +480,13 @@ class BTHome : public Component, public esp32_ble_tracker::ESPBTDeviceListener {
   template <typename T>
   void register_sensor(uint8_t oid, T oid_def, sensor::Sensor *sensor) {
     this->set_publisher(new SensorPublisher<T>(oid, oid_def, sensor));
+  }
+#endif
+
+#ifdef USE_TEXT_SENSOR
+  template <typename T>
+  void register_text_sensor(uint8_t oid, T oid_def, text_sensor::TextSensor *text_sensor) {
+    this->set_publisher(new TextSensorPublisher(oid, oid_def, text_sensor));
   }
 #endif
 
