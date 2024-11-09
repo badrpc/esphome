@@ -51,7 +51,8 @@ struct ScanResult {
   const uint8_t *next_ptr;
 };
 
-typedef ScanResult scan_func_t(const uint8_t *data, size_t size);
+using scan_func_t = ScanResult (const uint8_t *, size_t);
+
 
 template<size_t size_bytes> class OIDFixedSize {
  public:
@@ -399,7 +400,7 @@ template<typename OID> class SensorPublisher : public Publisher {
   ~SensorPublisher() override {}
 
   const uint8_t *publish(const uint8_t *data, size_t size) override {
-    FloatValue v = this->oid_def_.read(data, size);
+    FloatValue v = this->oid_def_.read(data, size);  // NOLINT(readability-static-accessed-through-instance)
     sensor_->publish_state(v.value);
     return v.next_ptr;
   }
@@ -424,7 +425,7 @@ class BinarySensorPublisher : public Publisher {
   ~BinarySensorPublisher() override {}
 
   const uint8_t *publish(const uint8_t *data, size_t size) override {
-    BoolValue v = this->oid_def_.read(data, size);
+    BoolValue v = this->oid_def_.read(data, size);  // NOLINT(readability-static-accessed-through-instance)
     sensor_->publish_state(v.value);
     return v.next_ptr;
   }
@@ -449,7 +450,7 @@ class TextSensorPublisher : public Publisher {
   ~TextSensorPublisher() override {}
 
   const uint8_t *publish(const uint8_t *data, size_t size) override {
-    StringValue v = this->oid_def_.read(data, size);
+    StringValue v = this->oid_def_.read(data, size);  // NOLINT(readability-static-accessed-through-instance)
     sensor_->publish_state(v.value);
     return v.next_ptr;
   }
