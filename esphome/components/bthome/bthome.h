@@ -71,7 +71,7 @@ template<size_t size_bytes> class OIDFixedSize {
   }
 };
 
-class OIDBool : public OIDFixedSize <1> {
+class OIDBool : public OIDFixedSize<1> {
  public:
   static BoolValue read(const uint8_t *data, size_t size) {
     ScanResult sr = OIDBool::scan(data, size);
@@ -88,7 +88,7 @@ class OIDBool : public OIDFixedSize <1> {
   }
 };
 
-template<size_t size_bytes> class OIDUInt : public OIDFixedSize <size_bytes> {
+template<size_t size_bytes> class OIDUInt : public OIDFixedSize<size_bytes> {
  public:
   static UInt32Value read(const uint8_t *data, size_t size) {
     ScanResult sr = OIDUInt::scan(data, size);
@@ -105,7 +105,7 @@ template<size_t size_bytes> class OIDUInt : public OIDFixedSize <size_bytes> {
   }
 };
 
-template<size_t size_bytes> class OIDSFixedPoint : public OIDFixedSize <size_bytes> {
+template<size_t size_bytes> class OIDSFixedPoint : public OIDFixedSize<size_bytes> {
  public:
   constexpr OIDSFixedPoint(float factor = 1.0) : factor_(factor) {}
 
@@ -192,7 +192,7 @@ class OIDBytes : public OIDVariableSize {
       };
     }
     return StringValue{
-        .value = std::string((const char *)sr.value_ptr, sr.value_size),
+        .value = std::string((const char *) sr.value_ptr, sr.value_size),
         .next_ptr = sr.next_ptr,
     };
   }
