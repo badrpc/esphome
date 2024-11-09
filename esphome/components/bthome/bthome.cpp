@@ -11,50 +11,52 @@ namespace bthome {
 #define OID_VAR(oid) oid_##oid
 #define OID_ENTRY(oid) [oid] = OID_VAR(oid).scan
 
+// TODO(badrpc): Switch to designated initializers if those become available
+// in C++.
 static scan_func_t *oids[256] = {
     [0x00] = OIDUInt8::scan, OID_ENTRY(0x01),  OID_ENTRY(0x02),  OID_ENTRY(0x03),  OID_ENTRY(0x04),  OID_ENTRY(0x05),
-    OID_ENTRY(0x06),       OID_ENTRY(0x07),  OID_ENTRY(0x08),  OID_ENTRY(0x09),  OID_ENTRY(0x0a),  OID_ENTRY(0x0b),
-    OID_ENTRY(0x0c),       OID_ENTRY(0x0d),  OID_ENTRY(0x0e),  OID_ENTRY(0x0f),  OID_ENTRY(0x10),  OID_ENTRY(0x11),
-    OID_ENTRY(0x12),       OID_ENTRY(0x13),  OID_ENTRY(0x14),  OID_ENTRY(0x15),  OID_ENTRY(0x16),  OID_ENTRY(0x17),
-    OID_ENTRY(0x18),       OID_ENTRY(0x19),  OID_ENTRY(0x1a),  OID_ENTRY(0x1b),  OID_ENTRY(0x1c),  OID_ENTRY(0x1d),
-    OID_ENTRY(0x1e),       OID_ENTRY(0x1f),  OID_ENTRY(0x20),  OID_ENTRY(0x21),  OID_ENTRY(0x22),  OID_ENTRY(0x23),
-    OID_ENTRY(0x24),       OID_ENTRY(0x25),  OID_ENTRY(0x26),  OID_ENTRY(0x27),  OID_ENTRY(0x28),  OID_ENTRY(0x29),
-    OID_ENTRY(0x2a),       OID_ENTRY(0x2b),  OID_ENTRY(0x2c),  OID_ENTRY(0x2d),  [0x2e] = nullptr, [0x2f] = nullptr,
-    [0x30] = nullptr,      [0x31] = nullptr, [0x32] = nullptr, [0x33] = nullptr, [0x34] = nullptr, [0x35] = nullptr,
-    [0x36] = nullptr,      [0x37] = nullptr, [0x38] = nullptr, [0x39] = nullptr, OID_ENTRY(0x3a),  [0x3b] = nullptr,
-    OID_ENTRY(0x3c),       OID_ENTRY(0x3d),  OID_ENTRY(0x3e),  OID_ENTRY(0x3f),  OID_ENTRY(0x40),  OID_ENTRY(0x41),
-    OID_ENTRY(0x42),       OID_ENTRY(0x43),  OID_ENTRY(0x44),  OID_ENTRY(0x45),  OID_ENTRY(0x46),  OID_ENTRY(0x47),
-    OID_ENTRY(0x48),       OID_ENTRY(0x49),  OID_ENTRY(0x4a),  OID_ENTRY(0x4b),  OID_ENTRY(0x4c),  OID_ENTRY(0x4d),
-    OID_ENTRY(0x4e),       OID_ENTRY(0x4f),  OID_ENTRY(0x50),  OID_ENTRY(0x51),  OID_ENTRY(0x52),  OID_ENTRY(0x53),
-    OID_ENTRY(0x54),       OID_ENTRY(0x55),  [0x56] = nullptr, [0x57] = nullptr, [0x58] = nullptr, [0x59] = nullptr,
-    [0x5a] = nullptr,      [0x5b] = nullptr, [0x5c] = nullptr, [0x5d] = nullptr, [0x5e] = nullptr, [0x5f] = nullptr,
-    [0x60] = nullptr,      [0x61] = nullptr, [0x62] = nullptr, [0x63] = nullptr, [0x64] = nullptr, [0x65] = nullptr,
-    [0x66] = nullptr,      [0x67] = nullptr, [0x68] = nullptr, [0x69] = nullptr, [0x6a] = nullptr, [0x6b] = nullptr,
-    [0x6c] = nullptr,      [0x6d] = nullptr, [0x6e] = nullptr, [0x6f] = nullptr, [0x70] = nullptr, [0x71] = nullptr,
-    [0x72] = nullptr,      [0x73] = nullptr, [0x74] = nullptr, [0x75] = nullptr, [0x76] = nullptr, [0x77] = nullptr,
-    [0x78] = nullptr,      [0x79] = nullptr, [0x7a] = nullptr, [0x7b] = nullptr, [0x7c] = nullptr, [0x7d] = nullptr,
-    [0x7e] = nullptr,      [0x7f] = nullptr, [0x80] = nullptr, [0x81] = nullptr, [0x82] = nullptr, [0x83] = nullptr,
-    [0x84] = nullptr,      [0x85] = nullptr, [0x86] = nullptr, [0x87] = nullptr, [0x88] = nullptr, [0x89] = nullptr,
-    [0x8a] = nullptr,      [0x8b] = nullptr, [0x8c] = nullptr, [0x8d] = nullptr, [0x8e] = nullptr, [0x8f] = nullptr,
-    [0x90] = nullptr,      [0x91] = nullptr, [0x92] = nullptr, [0x93] = nullptr, [0x94] = nullptr, [0x95] = nullptr,
-    [0x96] = nullptr,      [0x97] = nullptr, [0x98] = nullptr, [0x99] = nullptr, [0x9a] = nullptr, [0x9b] = nullptr,
-    [0x9c] = nullptr,      [0x9d] = nullptr, [0x9e] = nullptr, [0x9f] = nullptr, [0xa0] = nullptr, [0xa1] = nullptr,
-    [0xa2] = nullptr,      [0xa3] = nullptr, [0xa4] = nullptr, [0xa5] = nullptr, [0xa6] = nullptr, [0xa7] = nullptr,
-    [0xa8] = nullptr,      [0xa9] = nullptr, [0xaa] = nullptr, [0xab] = nullptr, [0xac] = nullptr, [0xad] = nullptr,
-    [0xae] = nullptr,      [0xaf] = nullptr, [0xb0] = nullptr, [0xb1] = nullptr, [0xb2] = nullptr, [0xb3] = nullptr,
-    [0xb4] = nullptr,      [0xb5] = nullptr, [0xb6] = nullptr, [0xb7] = nullptr, [0xb8] = nullptr, [0xb9] = nullptr,
-    [0xba] = nullptr,      [0xbb] = nullptr, [0xbc] = nullptr, [0xbd] = nullptr, [0xbe] = nullptr, [0xbf] = nullptr,
-    [0xc0] = nullptr,      [0xc1] = nullptr, [0xc2] = nullptr, [0xc3] = nullptr, [0xc4] = nullptr, [0xc5] = nullptr,
-    [0xc6] = nullptr,      [0xc7] = nullptr, [0xc8] = nullptr, [0xc9] = nullptr, [0xca] = nullptr, [0xcb] = nullptr,
-    [0xcc] = nullptr,      [0xcd] = nullptr, [0xce] = nullptr, [0xcf] = nullptr, [0xd0] = nullptr, [0xd1] = nullptr,
-    [0xd2] = nullptr,      [0xd3] = nullptr, [0xd4] = nullptr, [0xd5] = nullptr, [0xd6] = nullptr, [0xd7] = nullptr,
-    [0xd8] = nullptr,      [0xd9] = nullptr, [0xda] = nullptr, [0xdb] = nullptr, [0xdc] = nullptr, [0xdd] = nullptr,
-    [0xde] = nullptr,      [0xdf] = nullptr, [0xe0] = nullptr, [0xe1] = nullptr, [0xe2] = nullptr, [0xe3] = nullptr,
-    [0xe4] = nullptr,      [0xe5] = nullptr, [0xe6] = nullptr, [0xe7] = nullptr, [0xe8] = nullptr, [0xe9] = nullptr,
-    [0xea] = nullptr,      [0xeb] = nullptr, [0xec] = nullptr, [0xed] = nullptr, [0xee] = nullptr, [0xef] = nullptr,
-    [0xf0] = nullptr,      OID_ENTRY(0xf1),  OID_ENTRY(0xf2),  [0xf3] = nullptr, [0xf4] = nullptr, [0xf5] = nullptr,
-    [0xf6] = nullptr,      [0xf7] = nullptr, [0xf8] = nullptr, [0xf9] = nullptr, [0xfa] = nullptr, [0xfb] = nullptr,
-    [0xfc] = nullptr,      [0xfd] = nullptr, [0xfe] = nullptr, [0xff] = nullptr,
+    OID_ENTRY(0x06),         OID_ENTRY(0x07),  OID_ENTRY(0x08),  OID_ENTRY(0x09),  OID_ENTRY(0x0a),  OID_ENTRY(0x0b),
+    OID_ENTRY(0x0c),         OID_ENTRY(0x0d),  OID_ENTRY(0x0e),  OID_ENTRY(0x0f),  OID_ENTRY(0x10),  OID_ENTRY(0x11),
+    OID_ENTRY(0x12),         OID_ENTRY(0x13),  OID_ENTRY(0x14),  OID_ENTRY(0x15),  OID_ENTRY(0x16),  OID_ENTRY(0x17),
+    OID_ENTRY(0x18),         OID_ENTRY(0x19),  OID_ENTRY(0x1a),  OID_ENTRY(0x1b),  OID_ENTRY(0x1c),  OID_ENTRY(0x1d),
+    OID_ENTRY(0x1e),         OID_ENTRY(0x1f),  OID_ENTRY(0x20),  OID_ENTRY(0x21),  OID_ENTRY(0x22),  OID_ENTRY(0x23),
+    OID_ENTRY(0x24),         OID_ENTRY(0x25),  OID_ENTRY(0x26),  OID_ENTRY(0x27),  OID_ENTRY(0x28),  OID_ENTRY(0x29),
+    OID_ENTRY(0x2a),         OID_ENTRY(0x2b),  OID_ENTRY(0x2c),  OID_ENTRY(0x2d),  [0x2e] = nullptr, [0x2f] = nullptr,
+    [0x30] = nullptr,        [0x31] = nullptr, [0x32] = nullptr, [0x33] = nullptr, [0x34] = nullptr, [0x35] = nullptr,
+    [0x36] = nullptr,        [0x37] = nullptr, [0x38] = nullptr, [0x39] = nullptr, OID_ENTRY(0x3a),  [0x3b] = nullptr,
+    OID_ENTRY(0x3c),         OID_ENTRY(0x3d),  OID_ENTRY(0x3e),  OID_ENTRY(0x3f),  OID_ENTRY(0x40),  OID_ENTRY(0x41),
+    OID_ENTRY(0x42),         OID_ENTRY(0x43),  OID_ENTRY(0x44),  OID_ENTRY(0x45),  OID_ENTRY(0x46),  OID_ENTRY(0x47),
+    OID_ENTRY(0x48),         OID_ENTRY(0x49),  OID_ENTRY(0x4a),  OID_ENTRY(0x4b),  OID_ENTRY(0x4c),  OID_ENTRY(0x4d),
+    OID_ENTRY(0x4e),         OID_ENTRY(0x4f),  OID_ENTRY(0x50),  OID_ENTRY(0x51),  OID_ENTRY(0x52),  OID_ENTRY(0x53),
+    OID_ENTRY(0x54),         OID_ENTRY(0x55),  [0x56] = nullptr, [0x57] = nullptr, [0x58] = nullptr, [0x59] = nullptr,
+    [0x5a] = nullptr,        [0x5b] = nullptr, [0x5c] = nullptr, [0x5d] = nullptr, [0x5e] = nullptr, [0x5f] = nullptr,
+    [0x60] = nullptr,        [0x61] = nullptr, [0x62] = nullptr, [0x63] = nullptr, [0x64] = nullptr, [0x65] = nullptr,
+    [0x66] = nullptr,        [0x67] = nullptr, [0x68] = nullptr, [0x69] = nullptr, [0x6a] = nullptr, [0x6b] = nullptr,
+    [0x6c] = nullptr,        [0x6d] = nullptr, [0x6e] = nullptr, [0x6f] = nullptr, [0x70] = nullptr, [0x71] = nullptr,
+    [0x72] = nullptr,        [0x73] = nullptr, [0x74] = nullptr, [0x75] = nullptr, [0x76] = nullptr, [0x77] = nullptr,
+    [0x78] = nullptr,        [0x79] = nullptr, [0x7a] = nullptr, [0x7b] = nullptr, [0x7c] = nullptr, [0x7d] = nullptr,
+    [0x7e] = nullptr,        [0x7f] = nullptr, [0x80] = nullptr, [0x81] = nullptr, [0x82] = nullptr, [0x83] = nullptr,
+    [0x84] = nullptr,        [0x85] = nullptr, [0x86] = nullptr, [0x87] = nullptr, [0x88] = nullptr, [0x89] = nullptr,
+    [0x8a] = nullptr,        [0x8b] = nullptr, [0x8c] = nullptr, [0x8d] = nullptr, [0x8e] = nullptr, [0x8f] = nullptr,
+    [0x90] = nullptr,        [0x91] = nullptr, [0x92] = nullptr, [0x93] = nullptr, [0x94] = nullptr, [0x95] = nullptr,
+    [0x96] = nullptr,        [0x97] = nullptr, [0x98] = nullptr, [0x99] = nullptr, [0x9a] = nullptr, [0x9b] = nullptr,
+    [0x9c] = nullptr,        [0x9d] = nullptr, [0x9e] = nullptr, [0x9f] = nullptr, [0xa0] = nullptr, [0xa1] = nullptr,
+    [0xa2] = nullptr,        [0xa3] = nullptr, [0xa4] = nullptr, [0xa5] = nullptr, [0xa6] = nullptr, [0xa7] = nullptr,
+    [0xa8] = nullptr,        [0xa9] = nullptr, [0xaa] = nullptr, [0xab] = nullptr, [0xac] = nullptr, [0xad] = nullptr,
+    [0xae] = nullptr,        [0xaf] = nullptr, [0xb0] = nullptr, [0xb1] = nullptr, [0xb2] = nullptr, [0xb3] = nullptr,
+    [0xb4] = nullptr,        [0xb5] = nullptr, [0xb6] = nullptr, [0xb7] = nullptr, [0xb8] = nullptr, [0xb9] = nullptr,
+    [0xba] = nullptr,        [0xbb] = nullptr, [0xbc] = nullptr, [0xbd] = nullptr, [0xbe] = nullptr, [0xbf] = nullptr,
+    [0xc0] = nullptr,        [0xc1] = nullptr, [0xc2] = nullptr, [0xc3] = nullptr, [0xc4] = nullptr, [0xc5] = nullptr,
+    [0xc6] = nullptr,        [0xc7] = nullptr, [0xc8] = nullptr, [0xc9] = nullptr, [0xca] = nullptr, [0xcb] = nullptr,
+    [0xcc] = nullptr,        [0xcd] = nullptr, [0xce] = nullptr, [0xcf] = nullptr, [0xd0] = nullptr, [0xd1] = nullptr,
+    [0xd2] = nullptr,        [0xd3] = nullptr, [0xd4] = nullptr, [0xd5] = nullptr, [0xd6] = nullptr, [0xd7] = nullptr,
+    [0xd8] = nullptr,        [0xd9] = nullptr, [0xda] = nullptr, [0xdb] = nullptr, [0xdc] = nullptr, [0xdd] = nullptr,
+    [0xde] = nullptr,        [0xdf] = nullptr, [0xe0] = nullptr, [0xe1] = nullptr, [0xe2] = nullptr, [0xe3] = nullptr,
+    [0xe4] = nullptr,        [0xe5] = nullptr, [0xe6] = nullptr, [0xe7] = nullptr, [0xe8] = nullptr, [0xe9] = nullptr,
+    [0xea] = nullptr,        [0xeb] = nullptr, [0xec] = nullptr, [0xed] = nullptr, [0xee] = nullptr, [0xef] = nullptr,
+    [0xf0] = nullptr,        OID_ENTRY(0xf1),  OID_ENTRY(0xf2),  [0xf3] = nullptr, [0xf4] = nullptr, [0xf5] = nullptr,
+    [0xf6] = nullptr,        [0xf7] = nullptr, [0xf8] = nullptr, [0xf9] = nullptr, [0xfa] = nullptr, [0xfb] = nullptr,
+    [0xfc] = nullptr,        [0xfd] = nullptr, [0xfe] = nullptr, [0xff] = nullptr,
 };
 
 uint32_t read_uint(size_t size, const uint8_t *data) {
@@ -150,30 +152,35 @@ int decrypt(const uint8_t *data, ssize_t data_len, const uint8_t *mac_address, u
   //  UUID 2 bytes
   //  Device data 1 byte
   //  Counter 4 bytes
+  //
+  // TODO(badrpc): Switch to designated initializers if those become available
+  // in C++.
   uint8_t nonce[] = {
-      [0x00] = mac_address[0x00],
-      [0x01] = mac_address[0x01],
-      [0x02] = mac_address[0x02],
-      [0x03] = mac_address[0x03],
-      [0x04] = mac_address[0x04],
-      [0x05] = mac_address[0x05],
-      [0x06] = (uint8_t) (uuid & 0xff),
-      [0x07] = (uint8_t) ((uuid >> 8) & 0xff),
-      [0x08] = data[0x00],
-      [0x09] = data[data_len - 8],
-      [0x0A] = data[data_len - 7],
-      [0x0B] = data[data_len - 6],
-      [0x0C] = data[data_len - 5],
+      mac_address[0x00],
+      mac_address[0x01],
+      mac_address[0x02],
+      mac_address[0x03],
+      mac_address[0x04],
+      mac_address[0x05],
+      (uint8_t) (uuid & 0xff),
+      (uint8_t) ((uuid >> 8) & 0xff),
+      data[0x00],
+      data[data_len - 8],
+      data[data_len - 7],
+      data[data_len - 6],
+      data[data_len - 5],
   };
 
+  // TODO(badrpc): Switch to designated initializers if those become available
+  // in C++.
   uint8_t tag[] = {
-      [0x00] = data[data_len - 4],
-      [0x01] = data[data_len - 3],
-      [0x02] = data[data_len - 2],
-      [0x03] = data[data_len - 1],
+      data[data_len - 4],
+      data[data_len - 3],
+      data[data_len - 2],
+      data[data_len - 1],
   };
 
-  ret = mbedtls_ccm_auth_decrypt(&ctx, data_len - 9, nonce, sizeof(nonce) / sizeof(nonce[0]), NULL, 0, data + 1,
+  ret = mbedtls_ccm_auth_decrypt(&ctx, data_len - 9, nonce, sizeof(nonce) / sizeof(nonce[0]), nullptr, 0, data + 1,
                                  cleartext, tag, sizeof(tag) / sizeof(tag[0]));
   if (ret != 0) {
     ESP_LOGE(TAG, "mbedtls_ccm_auth_decrypt() failed: %04x", ret);
@@ -306,7 +313,7 @@ const uint8_t *BTHome::publish_(uint8_t oid, const uint8_t *data, size_t size) {
 }
 
 void BTHome::set_publisher_(Publisher *publisher) {
-  for (auto & p : this->publishers_) {
+  for (auto &p : this->publishers_) {
     if (p->oid() == publisher->oid()) {
       auto old = p;
       p = publisher;
